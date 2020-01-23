@@ -292,6 +292,11 @@ class FolioWebView : WebView {
             loadUrl("javascript:deleteThisHighlight()")
         }
 
+        if (config.isCopyEnabled) {
+            viewTextSelection.copySelection.visibility = View.VISIBLE
+        } else {
+            viewTextSelection.copySelection.visibility = View.GONE
+        }
         viewTextSelection.copySelection.setOnClickListener {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
@@ -299,6 +304,11 @@ class FolioWebView : WebView {
         viewTextSelection.shareSelection.setOnClickListener {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
+        }
+        if (config.isDefineEnabled) {
+            viewTextSelection.defineSelection.visibility = View.VISIBLE
+        } else {
+            viewTextSelection.defineSelection.visibility = View.GONE
         }
         viewTextSelection.defineSelection.setOnClickListener {
             dismissPopupWindow()

@@ -24,6 +24,8 @@ public class Config implements Parcelable {
     public static final String CONFIG_THEME_COLOR_INT = "theme_color_int";
     public static final String CONFIG_IS_TTS = "is_tts";
     public static final String CONFIG_IS_NOTE_TAKING_ENABLED = "is_note_taking_enabled";
+    public static final String CONFIG_IS_COPY_ENABLED = "is_copy_enabled";
+    public static final String CONFIG_IS_DEFINE_ENABLED = "is_define_enabled";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
@@ -38,6 +40,8 @@ public class Config implements Parcelable {
     private int themeColor = DEFAULT_THEME_COLOR_INT;
     private boolean showTts = true;
     private boolean hasNoteTaking = true;
+    private boolean defineEnabled = true;
+    private boolean copyEnabled = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
 
@@ -82,6 +86,8 @@ public class Config implements Parcelable {
         dest.writeString(allowedDirection.toString());
         dest.writeString(direction.toString());
         dest.writeByte((byte) (hasNoteTaking ? 1 : 0));
+        dest.writeByte((byte) (defineEnabled ? 1 : 0));
+        dest.writeByte((byte) (copyEnabled ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -93,6 +99,8 @@ public class Config implements Parcelable {
         allowedDirection = getAllowedDirectionFromString(LOG_TAG, in.readString());
         direction = getDirectionFromString(LOG_TAG, in.readString());
         hasNoteTaking = in.readByte() != 0;
+        defineEnabled = in.readByte() != 0;
+        copyEnabled = in.readByte() != 0;
     }
 
     public Config() {
@@ -109,6 +117,10 @@ public class Config implements Parcelable {
         direction = getDirectionFromString(LOG_TAG, jsonObject.optString(CONFIG_DIRECTION));
         if (jsonObject.has(CONFIG_IS_NOTE_TAKING_ENABLED))
             hasNoteTaking = jsonObject.optBoolean(CONFIG_IS_NOTE_TAKING_ENABLED);
+        if(jsonObject.has(CONFIG_IS_DEFINE_ENABLED))
+            defineEnabled = jsonObject.optBoolean(CONFIG_IS_DEFINE_ENABLED);
+        if(jsonObject.has(CONFIG_IS_COPY_ENABLED))
+            copyEnabled = jsonObject.optBoolean(CONFIG_IS_COPY_ENABLED);
 
     }
 
@@ -221,6 +233,24 @@ public class Config implements Parcelable {
         return this;
     }
 
+    public boolean isDefineEnabled() {
+        return defineEnabled;
+    }
+
+    public Config setDefineEnabled(boolean defineEnabled) {
+        this.defineEnabled = defineEnabled;
+        return this;
+    }
+
+    public boolean isCopyEnabled() {
+        return copyEnabled;
+    }
+
+    public Config setCopyEnabled(boolean copyEnabled) {
+        this.copyEnabled = copyEnabled;
+        return this;
+    }
+
     public AllowedDirection getAllowedDirection() {
         return allowedDirection;
     }
@@ -307,6 +337,8 @@ public class Config implements Parcelable {
                 ", allowedDirection=" + allowedDirection +
                 ", direction=" + direction +
                 ", isNoteTakingEnabled =" + hasNoteTaking +
+                ", copyEnabled =" + copyEnabled +
+                ", defineEnabled =" + defineEnabled +
                 '}';
     }
 }
