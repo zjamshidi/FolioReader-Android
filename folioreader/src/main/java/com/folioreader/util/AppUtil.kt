@@ -97,6 +97,7 @@ class AppUtil {
                 obj.put(Config.CONFIG_IS_TTS, config.isShowTts)
                 obj.put(Config.CONFIG_ALLOWED_DIRECTION, config.allowedDirection.toString())
                 obj.put(Config.CONFIG_DIRECTION, config.direction.toString())
+                obj.put(Config.CONFIG_IS_NOTE_TAKING_ENABLED, config.isNoteTakingEnabled)
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()

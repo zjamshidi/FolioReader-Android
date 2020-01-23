@@ -75,6 +75,11 @@ public class HighlightAdapter extends RecyclerView.Adapter<HighlightAdapter.High
 
             }
         });
+        if (config.isNoteTakingEnabled()) {
+            holder.editNote.setVisibility(View.VISIBLE);
+        } else {
+            holder.editNote.setVisibility(View.GONE);
+        }
         holder.editNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

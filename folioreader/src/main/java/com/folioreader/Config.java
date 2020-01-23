@@ -23,6 +23,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_IS_NIGHT_MODE = "is_night_mode";
     public static final String CONFIG_THEME_COLOR_INT = "theme_color_int";
     public static final String CONFIG_IS_TTS = "is_tts";
+    public static final String CONFIG_IS_NOTE_TAKING_ENABLED = "is_note_taking_enabled";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
@@ -36,6 +37,7 @@ public class Config implements Parcelable {
     @ColorInt
     private int themeColor = DEFAULT_THEME_COLOR_INT;
     private boolean showTts = true;
+    private boolean hasNoteTaking = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
 
@@ -79,6 +81,7 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (showTts ? 1 : 0));
         dest.writeString(allowedDirection.toString());
         dest.writeString(direction.toString());
+        dest.writeByte((byte) (hasNoteTaking ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -89,6 +92,7 @@ public class Config implements Parcelable {
         showTts = in.readByte() != 0;
         allowedDirection = getAllowedDirectionFromString(LOG_TAG, in.readString());
         direction = getDirectionFromString(LOG_TAG, in.readString());
+        hasNoteTaking = in.readByte() != 0;
     }
 
     public Config() {
@@ -103,6 +107,9 @@ public class Config implements Parcelable {
         allowedDirection = getAllowedDirectionFromString(LOG_TAG,
                 jsonObject.optString(CONFIG_ALLOWED_DIRECTION));
         direction = getDirectionFromString(LOG_TAG, jsonObject.optString(CONFIG_DIRECTION));
+        if (jsonObject.has(CONFIG_IS_NOTE_TAKING_ENABLED))
+            hasNoteTaking = jsonObject.optBoolean(CONFIG_IS_NOTE_TAKING_ENABLED);
+
     }
 
     public static Direction getDirectionFromString(final String LOG_TAG, String directionString) {
@@ -205,6 +212,15 @@ public class Config implements Parcelable {
         return this;
     }
 
+    public boolean isNoteTakingEnabled() {
+        return hasNoteTaking;
+    }
+
+    public Config setNoteTakingEnabled(boolean hasNoteTaking) {
+        this.hasNoteTaking = hasNoteTaking;
+        return this;
+    }
+
     public AllowedDirection getAllowedDirection() {
         return allowedDirection;
     }
@@ -290,6 +306,7 @@ public class Config implements Parcelable {
                 ", showTts=" + showTts +
                 ", allowedDirection=" + allowedDirection +
                 ", direction=" + direction +
+                ", isNoteTakingEnabled =" + hasNoteTaking +
                 '}';
     }
 }

@@ -64,6 +64,7 @@ public class HomeActivity extends AppCompatActivity
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
                 if (config == null)
                     config = new Config();
+                config.setNoteTakingEnabled(true);
                 config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
 
                 folioReader.setConfig(config, true)
@@ -80,6 +81,7 @@ public class HomeActivity extends AppCompatActivity
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
                 if (config == null)
                     config = new Config();
+                config.setNoteTakingEnabled(false);
                 config.setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL);
 
                 folioReader.setReadLocator(readLocator);
