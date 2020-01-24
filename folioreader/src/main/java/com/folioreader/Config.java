@@ -26,6 +26,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_IS_NOTE_TAKING_ENABLED = "is_note_taking_enabled";
     public static final String CONFIG_IS_COPY_ENABLED = "is_copy_enabled";
     public static final String CONFIG_IS_DEFINE_ENABLED = "is_define_enabled";
+    public static final String CONFIG_IS_SEARCH_ENABLED = "is_search_enabled";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
@@ -42,6 +43,7 @@ public class Config implements Parcelable {
     private boolean hasNoteTaking = true;
     private boolean defineEnabled = true;
     private boolean copyEnabled = true;
+    private boolean searchEnabled = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
 
@@ -88,6 +90,7 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (hasNoteTaking ? 1 : 0));
         dest.writeByte((byte) (defineEnabled ? 1 : 0));
         dest.writeByte((byte) (copyEnabled ? 1 : 0));
+        dest.writeByte((byte) (searchEnabled ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -101,6 +104,7 @@ public class Config implements Parcelable {
         hasNoteTaking = in.readByte() != 0;
         defineEnabled = in.readByte() != 0;
         copyEnabled = in.readByte() != 0;
+        searchEnabled = in.readByte() != 0;
     }
 
     public Config() {
@@ -121,6 +125,8 @@ public class Config implements Parcelable {
             defineEnabled = jsonObject.optBoolean(CONFIG_IS_DEFINE_ENABLED);
         if(jsonObject.has(CONFIG_IS_COPY_ENABLED))
             copyEnabled = jsonObject.optBoolean(CONFIG_IS_COPY_ENABLED);
+        if(jsonObject.has(CONFIG_IS_SEARCH_ENABLED))
+            searchEnabled =jsonObject.optBoolean(CONFIG_IS_SEARCH_ENABLED);
 
     }
 
@@ -251,6 +257,15 @@ public class Config implements Parcelable {
         return this;
     }
 
+    public boolean isSearchEnabled() {
+        return searchEnabled;
+    }
+
+    public Config setSearchEnabled(boolean searchEnabled) {
+        this.searchEnabled = searchEnabled;
+        return this;
+    }
+
     public AllowedDirection getAllowedDirection() {
         return allowedDirection;
     }
@@ -339,6 +354,7 @@ public class Config implements Parcelable {
                 ", isNoteTakingEnabled =" + hasNoteTaking +
                 ", copyEnabled =" + copyEnabled +
                 ", defineEnabled =" + defineEnabled +
+                ", searchEnabled =" + searchEnabled +
                 '}';
     }
 }

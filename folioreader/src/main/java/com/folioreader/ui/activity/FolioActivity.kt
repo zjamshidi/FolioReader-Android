@@ -368,6 +368,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
+        if(!config.isSearchEnabled)
+            menu.findItem(R.id.itemSearch).isVisible = false
 
         return true
     }

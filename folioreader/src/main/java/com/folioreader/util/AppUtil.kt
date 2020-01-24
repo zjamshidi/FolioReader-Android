@@ -100,6 +100,7 @@ class AppUtil {
                 obj.put(Config.CONFIG_IS_NOTE_TAKING_ENABLED, config.isNoteTakingEnabled)
                 obj.put(Config.CONFIG_IS_COPY_ENABLED, config.isCopyEnabled)
                 obj.put(Config.CONFIG_IS_DEFINE_ENABLED, config.isDefineEnabled)
+                obj.put(Config.CONFIG_IS_SEARCH_ENABLED, config.isSearchEnabled)
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()

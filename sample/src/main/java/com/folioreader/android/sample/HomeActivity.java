@@ -67,7 +67,8 @@ public class HomeActivity extends AppCompatActivity
                 config = config.setNoteTakingEnabled(true)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                 .setCopyEnabled(false)
-                .setDefineEnabled(true);
+                .setDefineEnabled(true)
+                .setSearchEnabled(false);
 
                 folioReader.setConfig(config, true)
                         .openBook(R.raw.accessible_epub_3);
@@ -86,7 +87,8 @@ public class HomeActivity extends AppCompatActivity
                 config = config.setNoteTakingEnabled(false)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                         .setCopyEnabled(false)
-                        .setDefineEnabled(false);
+                        .setDefineEnabled(false)
+                        .setSearchEnabled(true);
 
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)
