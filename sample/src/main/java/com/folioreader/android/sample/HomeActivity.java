@@ -68,7 +68,8 @@ public class HomeActivity extends AppCompatActivity
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                 .setCopyEnabled(false)
                 .setDefineEnabled(true)
-                .setSearchEnabled(false);
+                        .setSearchEnabled(false)
+                        .setDistractionFreeModeEnabled(false);
 
                 folioReader.setConfig(config, true)
                         .openBook(R.raw.accessible_epub_3);
@@ -88,7 +89,8 @@ public class HomeActivity extends AppCompatActivity
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                         .setCopyEnabled(false)
                         .setDefineEnabled(false)
-                        .setSearchEnabled(true);
+                        .setSearchEnabled(true)
+                        .setDistractionFreeModeEnabled(true);
 
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)

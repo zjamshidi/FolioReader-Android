@@ -27,6 +27,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_IS_COPY_ENABLED = "is_copy_enabled";
     public static final String CONFIG_IS_DEFINE_ENABLED = "is_define_enabled";
     public static final String CONFIG_IS_SEARCH_ENABLED = "is_search_enabled";
+    public static final String CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED = "is_distraction_free_mode_enabled";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
@@ -44,6 +45,7 @@ public class Config implements Parcelable {
     private boolean defineEnabled = true;
     private boolean copyEnabled = true;
     private boolean searchEnabled = true;
+    private boolean distractionFreeModeEnabled = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
 
@@ -91,6 +93,7 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (defineEnabled ? 1 : 0));
         dest.writeByte((byte) (copyEnabled ? 1 : 0));
         dest.writeByte((byte) (searchEnabled ? 1 : 0));
+        dest.writeByte((byte) (distractionFreeModeEnabled ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -105,6 +108,7 @@ public class Config implements Parcelable {
         defineEnabled = in.readByte() != 0;
         copyEnabled = in.readByte() != 0;
         searchEnabled = in.readByte() != 0;
+        distractionFreeModeEnabled = in.readByte() != 0;
     }
 
     public Config() {
@@ -127,7 +131,8 @@ public class Config implements Parcelable {
             copyEnabled = jsonObject.optBoolean(CONFIG_IS_COPY_ENABLED);
         if(jsonObject.has(CONFIG_IS_SEARCH_ENABLED))
             searchEnabled =jsonObject.optBoolean(CONFIG_IS_SEARCH_ENABLED);
-
+        if (jsonObject.has(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED))
+            distractionFreeModeEnabled = jsonObject.optBoolean(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED);
     }
 
     public static Direction getDirectionFromString(final String LOG_TAG, String directionString) {
@@ -266,6 +271,15 @@ public class Config implements Parcelable {
         return this;
     }
 
+    public boolean isDistractionFreeModeEnabled() {
+        return distractionFreeModeEnabled;
+    }
+
+    public Config setDistractionFreeModeEnabled(boolean distractionFreeModeEnabled) {
+        this.distractionFreeModeEnabled = distractionFreeModeEnabled;
+        return this;
+    }
+
     public AllowedDirection getAllowedDirection() {
         return allowedDirection;
     }
@@ -355,6 +369,7 @@ public class Config implements Parcelable {
                 ", copyEnabled =" + copyEnabled +
                 ", defineEnabled =" + defineEnabled +
                 ", searchEnabled =" + searchEnabled +
+                ", distractionFreeModeEnabled =" + distractionFreeModeEnabled +
                 '}';
     }
 }

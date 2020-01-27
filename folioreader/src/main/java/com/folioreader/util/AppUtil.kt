@@ -101,6 +101,10 @@ class AppUtil {
                 obj.put(Config.CONFIG_IS_COPY_ENABLED, config.isCopyEnabled)
                 obj.put(Config.CONFIG_IS_DEFINE_ENABLED, config.isDefineEnabled)
                 obj.put(Config.CONFIG_IS_SEARCH_ENABLED, config.isSearchEnabled)
+                obj.put(
+                    Config.CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED,
+                    config.isDistractionFreeModeEnabled
+                )
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()

@@ -577,7 +577,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         hideSystemUI()
         showSystemUI()
 
-        distractionFreeMode = savedInstanceState != null && savedInstanceState.getBoolean(BUNDLE_DISTRACTION_FREE_MODE)
+        if (savedInstanceState != null)
+            distractionFreeMode = savedInstanceState.getBoolean(BUNDLE_DISTRACTION_FREE_MODE)
+        else {
+            val config = AppUtil.getSavedConfig(applicationContext)!!
+            distractionFreeMode = config.isDistractionFreeModeEnabled
+        }
     }
 
     override fun onPostCreate(savedInstanceState: Bundle?) {
