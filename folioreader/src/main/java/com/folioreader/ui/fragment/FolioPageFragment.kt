@@ -787,6 +787,20 @@ class FolioPageFragment : Fragment(),
         }
     }
 
+    fun note(style: HighlightImpl.HighlightStyle, isAlreadyCreated: Boolean, note: String) {
+        if (!isAlreadyCreated) {
+            mWebview!!.loadUrl(
+                String.format(
+                    "javascript:if(typeof ssReader !== \"undefined\"){ssReader.noteSelection('%s', '%s');}",
+                    HighlightImpl.HighlightStyle.classForStyle(style),
+                    note
+                )
+            )
+        } else {
+            //todo
+        }
+    }
+
     override fun resetCurrentIndex() {
         if (isCurrentFragment) {
             mWebview!!.loadUrl("javascript:rewindCurrentIndex()")
@@ -802,7 +816,23 @@ class FolioPageFragment : Fragment(),
                 mBookId,
                 pageName,
                 spineIndex,
-                rangy
+                rangy,
+                null
+            )
+        }
+    }
+
+    @JavascriptInterface
+    fun onReceiveNotes(html: String?, note: String?) {
+        if (html != null) {
+            rangy = HighlightUtil.createHighlightRangy(
+                activity!!.applicationContext,
+                html,
+                mBookId,
+                pageName,
+                spineIndex,
+                rangy,
+                note
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.folioreader.ui.view
 
+import android.app.Dialog
 import android.content.Context
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
@@ -8,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
@@ -17,6 +19,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.webkit.ConsoleMessage
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -314,6 +317,41 @@ class FolioWebView : WebView {
             dismissPopupWindow()
             loadUrl("javascript:onTextSelectionItemClicked(${it.id})")
         }
+
+        if (config.isNoteTakingEnabled) {
+            viewTextSelection.noteSelection.visibility = View.VISIBLE
+        } else {
+            viewTextSelection.noteSelection.visibility = View.GONE
+        }
+
+        viewTextSelection.noteSelection.setOnClickListener {
+            Log.v(LOG_TAG, "-> onClick -> note")
+
+            val dialog =
+                Dialog(context, R.style.DialogCustomTheme)
+            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setContentView(R.layout.dialog_edit_notes)
+            dialog.show()
+
+            dialog.findViewById<View>(R.id.btn_save_note)
+                .setOnClickListener {
+                    val note =
+                        (dialog.findViewById<View>(R.id.edit_note) as EditText).text
+                            .toString()
+                    if (!TextUtils.isEmpty(note)) {
+                        onNoteItemsClicked(false, note)
+                        dialog.dismiss()
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.please_enter_note),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+
+        }
+
     }
 
     @JavascriptInterface
@@ -347,6 +385,11 @@ class FolioWebView : WebView {
         bundle.putString(Constants.SELECTED_WORD, selectedText?.trim())
         dictionaryFragment.arguments = bundle
         dictionaryFragment.show(parentFragment.fragmentManager!!, DictionaryFragment::class.java.name)
+    }
+
+    private fun onNoteItemsClicked(isAlreadyCreated: Boolean, note: String) {
+        parentFragment.note(HighlightStyle.Yellow, isAlreadyCreated, note)
+        dismissPopupWindow()
     }
 
     private fun onHighlightColorItemsClicked(style: HighlightStyle, isAlreadyCreated: Boolean) {

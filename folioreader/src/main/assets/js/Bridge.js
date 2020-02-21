@@ -320,6 +320,19 @@ $(function () {
             }
         },
 
+        noteSelection: function (color, note) {
+                    try {
+
+                        this.highlighter.highlightSelection(color, null);
+                        var range = window.getSelection().toString();
+                        var params = {content: range, rangy: this.getHighlights(), color: color};
+                        this.clearSelection();
+                        Highlight.onReceiveNotes(JSON.stringify(params), note);
+                    } catch (err) {
+                        console.log("highlightSelection : " + err);
+                    }
+                },
+
         unHighlightSelection: function () {
             try {
                 this.highlighter.unhighlightSelection();
