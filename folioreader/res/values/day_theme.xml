@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="FolioActivityDayTheme" parent="Theme.AppCompat.Light">
+    <style name="FolioActivityDayTheme" parent="Theme.MaterialComponents.Light">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/white</item>
@@ -30,7 +30,7 @@
     <color name="day_underline_icon_fill_color_top">#333333</color>
     <color name="day_scroll_bar_color">#44000000</color>
 
-    <style name="FolioDayTheme" parent="Theme.AppCompat.Light">
+    <style name="FolioDayTheme" parent="Theme.MaterialComponents.Light">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

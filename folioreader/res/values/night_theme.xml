@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="FolioActivityNightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="FolioActivityNightTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="colorPrimary">@color/black</item>
@@ -33,7 +33,7 @@
     <color name="night_underline_icon_fill_color_top">#888888</color>
     <color name="night_scroll_bar_color">#44FFFFFF</color>
 
-    <style name="FolioNightTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="FolioNightTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
 
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
