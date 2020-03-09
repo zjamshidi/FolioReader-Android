@@ -1,5 +1,6 @@
 package com.folioreader.android.sample;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.folioreader.ShareHandler;
@@ -9,7 +10,7 @@ import com.folioreader.ShareHandler;
  */
 public class CustomShareHandler extends ShareHandler {
     @Override
-    public void share(String selectedText) {
+    public void share(Context context, String selectedText) {
         Log.d("CustomShareHandler", "share tapped on " + selectedText);
     }
 }

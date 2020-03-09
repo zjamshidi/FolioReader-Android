@@ -375,7 +375,7 @@ class FolioWebView : WebView {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
 
                 if (shareHandler != null) {
-                    shareHandler!!.share(selectedText)
+                    shareHandler!!.share(context, selectedText)
                 } else {
                     UiUtil.share(context, selectedText)
                 }
