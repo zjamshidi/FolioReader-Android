@@ -44,11 +44,8 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.folioreader.Config
-import com.folioreader.Constants
+import com.folioreader.*
 import com.folioreader.Constants.*
-import com.folioreader.FolioReader
-import com.folioreader.R
 import com.folioreader.model.DisplayUnit
 import com.folioreader.model.HighlightImpl
 import com.folioreader.model.event.MediaOverlayPlayPauseEvent
@@ -116,6 +113,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
 
+    private var shareHandler: ShareHandler? = null
+
     companion object {
 
         @JvmField
@@ -124,6 +123,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         const val INTENT_EPUB_SOURCE_PATH = "com.folioreader.epub_asset_path"
         const val INTENT_EPUB_SOURCE_TYPE = "epub_source_type"
         const val EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR"
+        const val EXTRA_SHARE_HANDLER = "com.folioreader.extra.SHARE_HANDLER"
         private const val BUNDLE_READ_LOCATOR_CONFIG_CHANGE = "BUNDLE_READ_LOCATOR_CONFIG_CHANGE"
         private const val BUNDLE_DISTRACTION_FREE_MODE = "BUNDLE_DISTRACTION_FREE_MODE"
         const val EXTRA_SEARCH_ITEM = "EXTRA_SEARCH_ITEM"
@@ -254,6 +254,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             closeBroadcastReceiver,
             IntentFilter(FolioReader.ACTION_CLOSE_FOLIOREADER)
         )
+
+        shareHandler = intent.getSerializableExtra(EXTRA_SHARE_HANDLER) as ShareHandler?
 
         // Fix for screen get turned off while reading
         // TODO -> Make this configurable
@@ -557,7 +559,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mFolioPageViewPager!!.setDirection(newDirection)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
-            spine, bookFileName, mBookId
+            spine, bookFileName, mBookId, shareHandler
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
         mFolioPageViewPager!!.currentItem = currentChapterIndex
@@ -906,7 +908,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mFolioPageViewPager!!.setDirection(direction)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
-            spine, bookFileName, mBookId
+            spine, bookFileName, mBookId,shareHandler
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
 

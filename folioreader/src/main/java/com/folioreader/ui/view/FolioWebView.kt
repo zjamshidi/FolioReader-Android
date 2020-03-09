@@ -28,6 +28,7 @@ import androidx.core.view.GestureDetectorCompat
 import com.folioreader.Config
 import com.folioreader.Constants
 import com.folioreader.R
+import com.folioreader.ShareHandler
 import com.folioreader.model.DisplayUnit
 import com.folioreader.model.HighLight
 import com.folioreader.model.HighlightImpl.HighlightStyle
@@ -108,6 +109,7 @@ class FolioWebView : WebView {
     private var lastTouchAction: Int = 0
     private var destroyed: Boolean = false
     private var handleHeight: Int = 0
+    private var shareHandler: ShareHandler? = null
 
     private var lastScrollType: LastScrollType? = null
 
@@ -189,6 +191,10 @@ class FolioWebView : WebView {
             super@FolioWebView.onTouchEvent(event)
             return true
         }
+    }
+
+    fun setShareHandler(shareHandler: ShareHandler?) {
+        this.shareHandler = shareHandler
     }
 
     @JavascriptInterface
@@ -367,7 +373,12 @@ class FolioWebView : WebView {
             }
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
-                UiUtil.share(context, selectedText)
+
+                if (shareHandler != null) {
+                    shareHandler!!.share(selectedText)
+                } else {
+                    UiUtil.share(context, selectedText)
+                }
             }
             R.id.defineSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> defineSelection -> $selectedText")

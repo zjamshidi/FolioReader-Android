@@ -6,6 +6,8 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+
+import com.folioreader.ShareHandler;
 import com.folioreader.ui.fragment.FolioPageFragment;
 import org.readium.r2.shared.Link;
 
@@ -25,14 +27,16 @@ public class FolioPageFragmentAdapter extends FragmentStatePagerAdapter {
     private String mBookId;
     private ArrayList<Fragment> fragments;
     private ArrayList<Fragment.SavedState> savedStateList;
+    private ShareHandler shareHandler;
 
     public FolioPageFragmentAdapter(FragmentManager fragmentManager, List<Link> spineReferences,
-                                    String epubFileName, String bookId) {
+                                    String epubFileName, String bookId, ShareHandler shareHandler) {
         super(fragmentManager);
         this.mSpineReferences = spineReferences;
         this.mEpubFileName = epubFileName;
         this.mBookId = bookId;
         fragments = new ArrayList<>(Arrays.asList(new Fragment[mSpineReferences.size()]));
+        this.shareHandler = shareHandler;
     }
 
     @Override
@@ -58,7 +62,7 @@ public class FolioPageFragmentAdapter extends FragmentStatePagerAdapter {
         Fragment fragment = fragments.get(position);
         if (fragment == null) {
             fragment = FolioPageFragment.newInstance(position,
-                    mEpubFileName, mSpineReferences.get(position), mBookId);
+                    mEpubFileName, mSpineReferences.get(position), mBookId, shareHandler);
             fragments.set(position, fragment);
         }
         return fragment;

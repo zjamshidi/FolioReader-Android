@@ -19,8 +19,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.folioreader.Config;
@@ -66,12 +68,13 @@ public class HomeActivity extends AppCompatActivity
                     config = new Config();
                 config = config.setNoteTakingEnabled(true)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
-                .setCopyEnabled(false)
-                .setDefineEnabled(true)
+                        .setCopyEnabled(false)
+                        .setDefineEnabled(true)
                         .setSearchEnabled(false)
                         .setDistractionFreeModeEnabled(false);
 
                 folioReader.setConfig(config, true)
+                        .setShareHandler(new CustomShareHandler())
                         .openBook(R.raw.accessible_epub_3);
             }
         });
@@ -94,6 +97,7 @@ public class HomeActivity extends AppCompatActivity
 
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)
+                        .setShareHandler(null)
                         .openBook("file:///android_asset/TheSilverChair.epub");
             }
         });

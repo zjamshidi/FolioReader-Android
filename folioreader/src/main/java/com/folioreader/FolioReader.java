@@ -27,6 +27,8 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static com.folioreader.ui.activity.FolioActivity.EXTRA_SHARE_HANDLER;
+
 /**
  * Created by avez raj on 9/13/2017.
  */
@@ -51,6 +53,7 @@ public class FolioReader {
     private ReadLocatorListener readLocatorListener;
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
+    private ShareHandler shareHandler;
 
     @Nullable
     public Retrofit retrofit;
@@ -163,6 +166,7 @@ public class FolioReader {
         intent.putExtra(Config.EXTRA_OVERRIDE_CONFIG, overrideConfig);
         intent.putExtra(EXTRA_PORT_NUMBER, portNumber);
         intent.putExtra(FolioActivity.EXTRA_READ_LOCATOR, (Parcelable) readLocator);
+        intent.putExtra(EXTRA_SHARE_HANDLER, shareHandler);
 
         if (rawId != 0) {
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, rawId);
@@ -193,6 +197,11 @@ public class FolioReader {
         this.config = config;
         this.overrideConfig = overrideConfig;
         return singleton;
+    }
+
+    public FolioReader setShareHandler(ShareHandler shareHandler) {
+        this.shareHandler = shareHandler;
+        return this;
     }
 
     public FolioReader setPortNumber(int portNumber) {
