@@ -69,6 +69,7 @@ public class HomeActivity extends AppCompatActivity
                 config = config.setNoteTakingEnabled(true)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
                         .setCopyEnabled(false)
+                        .setThemeColorRes(R.color.highlight_pink)
                         .setDefineEnabled(true)
                         .setSearchEnabled(false)
                         .setDistractionFreeModeEnabled(false);
@@ -90,6 +91,7 @@ public class HomeActivity extends AppCompatActivity
                     config = new Config();
                 config = config.setNoteTakingEnabled(false)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
+                        .setThemeColorRes(R.color.highlight_blue)
                         .setCopyEnabled(false)
                         .setDefineEnabled(false)
                         .setSearchEnabled(true)
