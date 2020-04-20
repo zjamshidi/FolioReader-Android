@@ -2,6 +2,7 @@ package com.folioreader.ui.view
 
 import android.app.Dialog
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Rect
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -19,6 +20,7 @@ import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.webkit.ConsoleMessage
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import android.widget.Button
 import android.widget.EditText
 import android.widget.PopupWindow
 import android.widget.Toast
@@ -338,6 +340,9 @@ class FolioWebView : WebView {
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_edit_notes)
             dialog.show()
+
+            dialog.findViewById<Button>(R.id.btn_save_note).backgroundTintList =
+                ColorStateList.valueOf(config.themeColor)
 
             dialog.findViewById<View>(R.id.btn_save_note)
                 .setOnClickListener {

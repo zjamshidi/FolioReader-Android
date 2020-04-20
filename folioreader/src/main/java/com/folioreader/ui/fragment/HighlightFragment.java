@@ -3,6 +3,7 @@ package com.folioreader.ui.fragment;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -101,6 +102,10 @@ public class HighlightFragment extends Fragment implements HighlightAdapter.High
         dialog.show();
         String noteText = highlightImpl.getNote();
         ((EditText) dialog.findViewById(R.id.edit_note)).setText(noteText);
+
+        Config config = AppUtil.getSavedConfig(getActivity());
+        (dialog.findViewById(R.id.btn_save_note))
+                .setBackgroundTintList(ColorStateList.valueOf(config.getThemeColor()));
 
         dialog.findViewById(R.id.btn_save_note).setOnClickListener(new View.OnClickListener() {
             @Override
