@@ -335,8 +335,7 @@ class FolioWebView : WebView {
         viewTextSelection.noteSelection.setOnClickListener {
             Log.v(LOG_TAG, "-> onClick -> note")
 
-            val dialog =
-                Dialog(context, R.style.DialogCustomTheme)
+            val dialog = Dialog(ctw)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setContentView(R.layout.dialog_edit_notes)
             dialog.show()

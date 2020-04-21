@@ -2,6 +2,7 @@ package com.folioreader.ui.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -97,7 +99,12 @@ public class HighlightFragment extends Fragment implements HighlightAdapter.High
 
     @Override
     public void editNote(final HighlightImpl highlightImpl, final int position) {
-        final Dialog dialog = new Dialog(getActivity(), R.style.DialogCustomTheme);
+        Config config = AppUtil.getSavedConfig(getActivity());
+        Context ctw = (config.isNightMode()) ?
+            new ContextThemeWrapper(getActivity(), R.style.FolioNightTheme) :
+            new ContextThemeWrapper(getActivity(), R.style.FolioDayTheme);
+
+        final Dialog dialog = new Dialog(ctw);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.dialog_edit_notes);
         dialog.show();
@@ -108,7 +115,6 @@ public class HighlightFragment extends Fragment implements HighlightAdapter.High
             ((TextView)dialog.findViewById(R.id.lbl_heading)).setText(R.string.edit_notes);
         }
 
-        Config config = AppUtil.getSavedConfig(getActivity());
         (dialog.findViewById(R.id.btn_save_note))
                 .setBackgroundTintList(ColorStateList.valueOf(config.getThemeColor()));
 
