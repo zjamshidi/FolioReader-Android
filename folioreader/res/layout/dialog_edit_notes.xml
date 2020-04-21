@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:text="@string/edit_notes"
+            android:text="@string/create_notes"
             android:textSize="23sp" />
 
         <EditText

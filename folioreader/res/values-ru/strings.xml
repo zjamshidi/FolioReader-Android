@@ -37,6 +37,7 @@
     <string name="loading">Загрузка</string>
     <string name="please_wait">пожалуйста, подождите...</string>
     <string name="please_wait_till_audio_is_parsed">пожалуйста, подождите, пока звук будет обработан, повторите попытку через некоторое время</string>
+    <string name="create_notes">@string/edit_notes</string>
     <string name="edit_notes">Сохранить ваши заметки</string>
     <string name="save_note">Сохранить заметку</string>
     <string name="please_enter_note">пожалуйста введите заметку</string>

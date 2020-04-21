@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -102,6 +103,10 @@ public class HighlightFragment extends Fragment implements HighlightAdapter.High
         dialog.show();
         String noteText = highlightImpl.getNote();
         ((EditText) dialog.findViewById(R.id.edit_note)).setText(noteText);
+
+        if(!TextUtils.isEmpty(noteText)){
+            ((TextView)dialog.findViewById(R.id.lbl_heading)).setText(R.string.edit_notes);
+        }
 
         Config config = AppUtil.getSavedConfig(getActivity());
         (dialog.findViewById(R.id.btn_save_note))

@@ -41,6 +41,7 @@
     <string name="loading">Načítava</string>
     <string name="please_wait">prosím čakajte...</string>
     <string name="please_wait_till_audio_is_parsed">čakajte prosím na analyzovanie zvuku, o chvíľu skúste znovu</string>
+    <string name="create_notes">@string/edit_notes</string>
     <string name="edit_notes">Uložte si poznámku</string>
     <string name="save_note">Uložiť poznámku</string>
     <string name="please_enter_note">zadajte poznámku</string>

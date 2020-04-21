@@ -15,6 +15,7 @@
     <string name="Cancel">Cancelar</string>
     <string name="loading">Carregando</string>
     <string name="please_wait">aguarde...</string>
+    <string name="create_notes">@string/edit_notes</string>
     <string name="edit_notes">Salvar nota</string>
     <string name="save_note">Salvar</string>
     <string name="please_enter_note">Digite a nota</string>
