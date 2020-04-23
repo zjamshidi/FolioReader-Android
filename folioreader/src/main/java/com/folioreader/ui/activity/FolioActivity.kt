@@ -329,11 +329,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
             window.navigationBarColor = color
         }
-
-        if (Build.VERSION.SDK_INT < 16) {
-            // Fix for appBarLayout.fitSystemWindows() not being called on API < 16
-            appBarLayout!!.setTopMargin(statusBarHeight)
-        }
     }
 
     override fun setDayMode() {
@@ -343,6 +338,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             ColorDrawable(ContextCompat.getColor(this, R.color.white))
         )
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
+
+        findViewById<View>(R.id.main)!!.setBackgroundDrawable(
+            ColorDrawable(ContextCompat.getColor(this, R.color.white))
+        )
     }
 
     override fun setNightMode() {
@@ -352,6 +351,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             ColorDrawable(ContextCompat.getColor(this, R.color.black))
         )
         toolbar!!.setTitleTextColor(ContextCompat.getColor(this, R.color.night_title_text_color))
+
+        findViewById<View>(R.id.main)!!.setBackgroundDrawable(
+            ColorDrawable(ContextCompat.getColor(this, R.color.black))
+        )
     }
 
     private fun initMediaController() {
@@ -705,11 +708,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         distractionFreeMode = visibility != View.SYSTEM_UI_FLAG_VISIBLE
         Log.v(LOG_TAG, "-> distractionFreeMode = $distractionFreeMode")
 
-        if (actionBar != null) {
+        if (appBarLayout != null) {
             if (distractionFreeMode) {
-                actionBar!!.hide()
+                appBarLayout!!.setTopMargin(0)
             } else {
-                actionBar!!.show()
+                appBarLayout!!.setTopMargin(statusBarHeight)
             }
         }
     }
@@ -733,8 +736,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                     or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN)
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
-            if (appBarLayout != null)
-                appBarLayout!!.setTopMargin(statusBarHeight)
             onSystemUiVisibilityChange(View.SYSTEM_UI_FLAG_VISIBLE)
         }
     }
