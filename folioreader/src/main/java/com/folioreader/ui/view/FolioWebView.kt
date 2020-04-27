@@ -14,6 +14,7 @@ import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
+import android.util.TypedValue
 import android.view.*
 import android.view.ActionMode.Callback
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -766,10 +767,20 @@ class FolioWebView : WebView {
         )
         selectionRect = currentSelectionRect
 
+        // Use the action bar theme.
+        val outValue = TypedValue()
+            context.theme.resolveAttribute(
+                androidx.appcompat.R.attr.actionBarSize, outValue, true
+            )
+        val height = TypedValue.complexToDimensionPixelSize(
+            outValue.data,
+            context.resources.displayMetrics
+        )
+
         val aboveSelectionRect = Rect(viewportRect)
-        aboveSelectionRect.bottom = selectionRect.top - (8 * density).toInt()
+        aboveSelectionRect.bottom = selectionRect.top + height - (8 * density).toInt()
         val belowSelectionRect = Rect(viewportRect)
-        belowSelectionRect.top = selectionRect.bottom + handleHeight
+        belowSelectionRect.top = selectionRect.bottom + height +  handleHeight
 
         //Log.d(LOG_TAG, "-> aboveSelectionRect -> " + aboveSelectionRect);
         //Log.d(LOG_TAG, "-> belowSelectionRect -> " + belowSelectionRect);
