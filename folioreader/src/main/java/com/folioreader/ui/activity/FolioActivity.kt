@@ -370,12 +370,13 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemSearch).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemConfig).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemTts).icon)
+        UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemShare).icon)
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
         if(!config.isSearchEnabled)
             menu.findItem(R.id.itemSearch).isVisible = false
-
+        shareHandler?.let { menu.findItem(R.id.itemShare).isVisible = false }
         return true
     }
 
@@ -409,6 +410,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemTts) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             showMediaController()
+            return true
+        } else if (itemId == R.id.itemShare) {
+            Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
+            shareHandler?.share(this, null)
             return true
         }
 

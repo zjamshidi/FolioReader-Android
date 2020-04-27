@@ -26,4 +26,11 @@
         app:showAsAction="ifRoom"
         tools:showAsAction="always" />
 
+    <item
+        android:id="@+id/itemShare"
+        android:icon="@drawable/ic_share"
+        android:title="@string/menu_item_share"
+        app:showAsAction="ifRoom"
+        tools:showAsAction="always" />
+
 </menu>
