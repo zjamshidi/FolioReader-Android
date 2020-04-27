@@ -374,9 +374,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
-        if(!config.isSearchEnabled)
+        if (!config.isSearchEnabled)
             menu.findItem(R.id.itemSearch).isVisible = false
-        shareHandler?.let { menu.findItem(R.id.itemShare).isVisible = false }
+        if (shareHandler == null)
+            menu.findItem(R.id.itemShare).isVisible = false
         return true
     }
 
