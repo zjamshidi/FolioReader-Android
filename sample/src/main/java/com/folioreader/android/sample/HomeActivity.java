@@ -15,6 +15,7 @@
  */
 package com.folioreader.android.sample;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.folioreader.Config;
 import com.folioreader.FolioReader;
+import com.folioreader.ShareHandler;
 import com.folioreader.model.HighLight;
 import com.folioreader.model.locators.ReadLocator;
 import com.folioreader.ui.base.OnSaveHighlight;
@@ -74,7 +76,12 @@ public class HomeActivity extends AppCompatActivity
                         .setSearchEnabled(false)
                         .setDistractionFreeModeEnabled(false);
 
-                AppUtil.setShareHandler(new CustomShareHandler());
+                AppUtil.setShareHandler(new ShareHandler() {
+                    @Override
+                    public void share(Context context, String selectedText) {
+                        Log.d("CustomShareHandler", "share tapped on " + selectedText);
+                    }
+                });
 
                 folioReader.setConfig(config, true)
                         .openBook(R.raw.accessible_epub_3);
