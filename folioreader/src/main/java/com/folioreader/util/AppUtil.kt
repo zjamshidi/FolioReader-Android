@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.folioreader.Config
 import com.folioreader.Constants
+import com.folioreader.ShareHandler
 import com.folioreader.util.SharedPreferenceUtil.getSharedPreferencesString
 import org.json.JSONArray
 import org.json.JSONException
@@ -29,10 +30,21 @@ class AppUtil {
         private val LOG_TAG = AppUtil::class.java.simpleName
         private val FOLIO_READER_ROOT = "folioreader"
 
+        private var shareHandler: ShareHandler? = null
+
         private enum class FileType {
             OPS,
             OEBPS,
             NONE
+        }
+
+        fun getShareHandler():ShareHandler?{
+            return shareHandler
+        }
+
+        @JvmStatic
+        fun setShareHandler(handler: ShareHandler?){
+            shareHandler = handler
         }
 
         fun toMap(jsonString: String): Map<String, String> {

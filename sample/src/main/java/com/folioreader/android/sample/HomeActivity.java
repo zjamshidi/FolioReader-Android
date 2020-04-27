@@ -74,8 +74,9 @@ public class HomeActivity extends AppCompatActivity
                         .setSearchEnabled(false)
                         .setDistractionFreeModeEnabled(false);
 
+                AppUtil.setShareHandler(new CustomShareHandler());
+
                 folioReader.setConfig(config, true)
-                        .setShareHandler(new CustomShareHandler())
                         .openBook(R.raw.accessible_epub_3);
             }
         });
@@ -97,9 +98,10 @@ public class HomeActivity extends AppCompatActivity
                         .setSearchEnabled(true)
                         .setDistractionFreeModeEnabled(true);
 
+                AppUtil.setShareHandler(null);
+
                 folioReader.setReadLocator(readLocator);
                 folioReader.setConfig(config, true)
-                        .setShareHandler(null)
                         .openBook("file:///android_asset/TheSilverChair.epub");
             }
         });

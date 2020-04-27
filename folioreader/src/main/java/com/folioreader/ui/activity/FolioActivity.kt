@@ -113,8 +113,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var topActivity: Boolean? = null
     private var taskImportance: Int = 0
 
-    private var shareHandler: ShareHandler? = null
-
     companion object {
 
         @JvmField
@@ -123,7 +121,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         const val INTENT_EPUB_SOURCE_PATH = "com.folioreader.epub_asset_path"
         const val INTENT_EPUB_SOURCE_TYPE = "epub_source_type"
         const val EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR"
-        const val EXTRA_SHARE_HANDLER = "com.folioreader.extra.SHARE_HANDLER"
         private const val BUNDLE_READ_LOCATOR_CONFIG_CHANGE = "BUNDLE_READ_LOCATOR_CONFIG_CHANGE"
         private const val BUNDLE_DISTRACTION_FREE_MODE = "BUNDLE_DISTRACTION_FREE_MODE"
         const val EXTRA_SEARCH_ITEM = "EXTRA_SEARCH_ITEM"
@@ -255,8 +252,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             IntentFilter(FolioReader.ACTION_CLOSE_FOLIOREADER)
         )
 
-        shareHandler = intent.getSerializableExtra(EXTRA_SHARE_HANDLER) as ShareHandler?
-
         // Fix for screen get turned off while reading
         // TODO -> Make this configurable
         // getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -376,7 +371,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             menu.findItem(R.id.itemTts).isVisible = false
         if (!config.isSearchEnabled)
             menu.findItem(R.id.itemSearch).isVisible = false
-        if (shareHandler == null)
+        if (AppUtil.getShareHandler() == null)
             menu.findItem(R.id.itemShare).isVisible = false
         return true
     }
@@ -414,7 +409,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             return true
         } else if (itemId == R.id.itemShare) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
-            shareHandler?.share(this, null)
+            AppUtil.getShareHandler()?.share(this, null)
             return true
         }
 
@@ -568,7 +563,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mFolioPageViewPager!!.setDirection(newDirection)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
-            spine, bookFileName, mBookId, shareHandler
+            spine, bookFileName, mBookId
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
         mFolioPageViewPager!!.currentItem = currentChapterIndex
@@ -915,7 +910,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         mFolioPageViewPager!!.setDirection(direction)
         mFolioPageFragmentAdapter = FolioPageFragmentAdapter(
             supportFragmentManager,
-            spine, bookFileName, mBookId,shareHandler
+            spine, bookFileName, mBookId
         )
         mFolioPageViewPager!!.adapter = mFolioPageFragmentAdapter
 

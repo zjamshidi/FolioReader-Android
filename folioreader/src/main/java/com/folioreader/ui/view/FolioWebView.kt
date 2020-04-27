@@ -112,7 +112,6 @@ class FolioWebView : WebView {
     private var lastTouchAction: Int = 0
     private var destroyed: Boolean = false
     private var handleHeight: Int = 0
-    private var shareHandler: ShareHandler? = null
 
     private var lastScrollType: LastScrollType? = null
 
@@ -194,10 +193,6 @@ class FolioWebView : WebView {
             super@FolioWebView.onTouchEvent(event)
             return true
         }
-    }
-
-    fun setShareHandler(shareHandler: ShareHandler?) {
-        this.shareHandler = shareHandler
     }
 
     @JavascriptInterface
@@ -379,8 +374,9 @@ class FolioWebView : WebView {
             R.id.shareSelection -> {
                 Log.v(LOG_TAG, "-> onTextSelectionItemClicked -> shareSelection -> $selectedText")
 
+                val shareHandler = AppUtil.getShareHandler()
                 if (shareHandler != null) {
-                    shareHandler!!.share(context, selectedText)
+                    shareHandler.share(context, selectedText)
                 } else {
                     UiUtil.share(context, selectedText)
                 }
