@@ -37,6 +37,7 @@ public class FolioReader {
     private static FolioReader singleton = null;
 
     public static final String EXTRA_BOOK_ID = "com.folioreader.extra.BOOK_ID";
+    public static final String EXTRA_SUGGESTED_TITLE = "com.folioreader.extra.SUGGESTED_TITLE";
     public static final String EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR";
     public static final String EXTRA_PORT_NUMBER = "com.folioreader.extra.PORT_NUMBER";
     public static final String ACTION_SAVE_READ_LOCATOR = "com.folioreader.action.SAVE_READ_LOCATOR";
@@ -130,32 +131,44 @@ public class FolioReader {
     }
 
     public FolioReader openBook(String assetOrSdcardPath) {
-        Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
+        Intent intent = getIntentFromUrl(assetOrSdcardPath, 0, null);
         context.startActivity(intent);
         return singleton;
     }
 
     public FolioReader openBook(int rawId) {
-        Intent intent = getIntentFromUrl(null, rawId);
+        Intent intent = getIntentFromUrl(null, rawId, null);
         context.startActivity(intent);
         return singleton;
     }
 
-    public FolioReader openBook(String assetOrSdcardPath, String bookId) {
-        Intent intent = getIntentFromUrl(assetOrSdcardPath, 0);
+    public FolioReader openBook(String assetOrSdcardPath, String suggestedTitle) {
+        Intent intent = getIntentFromUrl(assetOrSdcardPath, 0, suggestedTitle);
+        context.startActivity(intent);
+        return singleton;
+    }
+
+    public FolioReader openBook(int rawId, String suggestedTitle) {
+        Intent intent = getIntentFromUrl(null, rawId, suggestedTitle);
+        context.startActivity(intent);
+        return singleton;
+    }
+
+    public FolioReader openBook(String assetOrSdcardPath, String bookId, String suggestedTitle) {
+        Intent intent = getIntentFromUrl(assetOrSdcardPath, 0, suggestedTitle);
         intent.putExtra(EXTRA_BOOK_ID, bookId);
         context.startActivity(intent);
         return singleton;
     }
 
-    public FolioReader openBook(int rawId, String bookId) {
-        Intent intent = getIntentFromUrl(null, rawId);
+    public FolioReader openBook(int rawId, String bookId, String suggestedTitle) {
+        Intent intent = getIntentFromUrl(null, rawId, suggestedTitle);
         intent.putExtra(EXTRA_BOOK_ID, bookId);
         context.startActivity(intent);
         return singleton;
     }
 
-    private Intent getIntentFromUrl(String assetOrSdcardPath, int rawId) {
+    private Intent getIntentFromUrl(String assetOrSdcardPath, int rawId, String suggestedTitle) {
 
         Intent intent = new Intent(context, FolioActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -163,6 +176,7 @@ public class FolioReader {
         intent.putExtra(Config.EXTRA_OVERRIDE_CONFIG, overrideConfig);
         intent.putExtra(EXTRA_PORT_NUMBER, portNumber);
         intent.putExtra(FolioActivity.EXTRA_READ_LOCATOR, (Parcelable) readLocator);
+        intent.putExtra(EXTRA_SUGGESTED_TITLE, suggestedTitle);
 
         if (rawId != 0) {
             intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, rawId);

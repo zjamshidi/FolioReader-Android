@@ -94,6 +94,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var pubBox: PubBox? = null
     private var spine: List<Link>? = null
 
+    private var mSuggestedTitle: String? = null
     private var mBookId: String? = null
     private var mEpubFilePath: String? = null
     private var mEpubSourceType: EpubSourceType? = null
@@ -266,6 +267,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             searchAdapterDataBundle = savedInstanceState.getBundle(SearchAdapter.DATA_BUNDLE)
             searchQuery = savedInstanceState.getCharSequence(SearchActivity.BUNDLE_SAVE_SEARCH_QUERY)
         }
+
+        mSuggestedTitle = intent.getStringExtra(FolioReader.EXTRA_SUGGESTED_TITLE)
 
         mBookId = intent.getStringExtra(FolioReader.EXTRA_BOOK_ID)
         mEpubSourceType = intent.extras!!.getSerializable(FolioActivity.INTENT_EPUB_SOURCE_TYPE) as EpubSourceType
@@ -515,7 +518,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         val publication = pubBox!!.publication
         spine = publication.readingOrder
-        title = publication.metadata.title
+        title = if (mSuggestedTitle != null)
+            mSuggestedTitle
+        else
+            publication.metadata.title
 
         if (mBookId == null) {
             if (!publication.metadata.identifier.isEmpty()) {
