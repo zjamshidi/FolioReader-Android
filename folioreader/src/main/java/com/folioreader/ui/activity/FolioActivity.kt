@@ -36,6 +36,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -309,6 +310,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         val drawable = ContextCompat.getDrawable(this, R.drawable.ic_drawer)
         UiUtil.setColorIntToDrawable(config.themeColor, drawable!!)
         toolbar!!.navigationIcon = drawable
+
+
+        ((toolbar!!.getChildAt(0)) as TextView).textSize = 18f;
 
         if (config.isNightMode) {
             setNightMode()
