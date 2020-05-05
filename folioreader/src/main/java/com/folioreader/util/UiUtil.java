@@ -29,6 +29,8 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
+
 import com.folioreader.AppContext;
 import com.folioreader.R;
 import com.folioreader.ui.view.UnderlinedTextView;
@@ -303,7 +305,10 @@ public class UiUtil {
     }
 
     public static void setShapeColor(View view, @ColorInt int color) {
-        ((GradientDrawable) view.getBackground()).setColor(color);
+        Drawable drawable = view.getBackground();
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, color);
+        view.setBackground(drawable);
     }
 
     public static int pxToDp(int px) {
