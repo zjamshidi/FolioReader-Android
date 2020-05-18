@@ -312,7 +312,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         toolbar!!.navigationIcon = drawable
 
 
-        ((toolbar!!.getChildAt(0)) as TextView).textSize = 14f
+        ((toolbar!!.getChildAt(0)) as TextView).textSize = 13f
 
         if (config.isNightMode) {
             setNightMode()
