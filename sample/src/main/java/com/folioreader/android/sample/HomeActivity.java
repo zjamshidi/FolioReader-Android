@@ -71,11 +71,11 @@ public class HomeActivity extends AppCompatActivity
                     config = new Config();
                 config = config.setNoteTakingEnabled(true)
                         .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
-                        .setCopyEnabled(false)
+                        .setCopyEnabled(true)
                         .setThemeColorRes(R.color.highlight_pink)
                         .setDefineEnabled(true)
-                        .setSearchEnabled(false)
-                        .setDistractionFreeModeEnabled(false);
+                        .setSearchEnabled(true)
+                        .setDistractionFreeModeEnabled(true);
 
                 AppUtil.setShareHandler(new ShareHandler() {
                     @Override
@@ -106,12 +106,12 @@ public class HomeActivity extends AppCompatActivity
                 if (config == null)
                     config = new Config();
                 config = config.setNoteTakingEnabled(false)
-                        .setAllowedDirection(Config.AllowedDirection.VERTICAL_AND_HORIZONTAL)
+                        .setAllowedDirection(Config.AllowedDirection.ONLY_HORIZONTAL)
                         .setThemeColorRes(R.color.highlight_blue)
                         .setCopyEnabled(false)
                         .setDefineEnabled(false)
-                        .setSearchEnabled(true)
-                        .setDistractionFreeModeEnabled(true);
+                        .setSearchEnabled(false)
+                        .setDistractionFreeModeEnabled(false);
 
                 AppUtil.setShareHandler(null);
                 AppUtil.setReportHandler(null);

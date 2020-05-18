@@ -8,14 +8,14 @@
         android:id="@+id/itemSearch"
         android:icon="@drawable/ic_search"
         android:title="@string/menu_item_search"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:showAsAction="always" />
 
     <item
         android:id="@+id/itemConfig"
         android:icon="@drawable/icon_font"
         android:title="@string/menu_item_config"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:showAsAction="always" />
 
     <item
@@ -23,21 +23,21 @@
         android:icon="@drawable/man_speech_icon"
         android:title="@string/menu_item_tts"
         android:visible="false"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:showAsAction="always" />
 
     <item
         android:id="@+id/itemShare"
         android:icon="@drawable/ic_share"
         android:title="@string/menu_item_share"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:showAsAction="always" />
 
     <item
         android:id="@+id/itemReport"
         android:icon="@drawable/ic_flag"
         android:title="@string/menu_item_report"
-        app:showAsAction="ifRoom"
+        app:showAsAction="always"
         tools:showAsAction="always" />
 
 </menu>
