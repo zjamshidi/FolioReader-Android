@@ -99,6 +99,7 @@
     <string name="xhtml_mime_type" translatable="false">application/xhtml+xml</string>
     <string name="html_mime_type" translatable="false">text/html</string>
 
+    <string name="menu_item_report">Report an issue</string>
     <string name="menu_item_share">Share</string>
     <string name="menu_item_search">Search</string>
     <string name="menu_item_config">Configuration</string>

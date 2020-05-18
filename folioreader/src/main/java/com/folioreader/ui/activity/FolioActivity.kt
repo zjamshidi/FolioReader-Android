@@ -312,7 +312,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         toolbar!!.navigationIcon = drawable
 
 
-        ((toolbar!!.getChildAt(0)) as TextView).textSize = 18f;
+        ((toolbar!!.getChildAt(0)) as TextView).textSize = 14f
 
         if (config.isNightMode) {
             setNightMode()
@@ -373,6 +373,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemConfig).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemTts).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemShare).icon)
+        UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemReport).icon)
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
@@ -380,6 +381,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             menu.findItem(R.id.itemSearch).isVisible = false
         if (AppUtil.getShareHandler() == null)
             menu.findItem(R.id.itemShare).isVisible = false
+        if (AppUtil.getReportHandler() == null)
+            menu.findItem(R.id.itemReport).isVisible = false
         return true
     }
 
@@ -417,6 +420,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemShare) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             AppUtil.getShareHandler()?.share(this, null)
+            return true
+        } else if (itemId == R.id.itemReport) {
+            Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
+            AppUtil.getReportHandler()?.report(this)
             return true
         }
 

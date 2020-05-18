@@ -9,6 +9,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import com.folioreader.Config
 import com.folioreader.Constants
+import com.folioreader.ReportHandler
 import com.folioreader.ShareHandler
 import com.folioreader.util.SharedPreferenceUtil.getSharedPreferencesString
 import org.json.JSONArray
@@ -31,6 +32,7 @@ class AppUtil {
         private val FOLIO_READER_ROOT = "folioreader"
 
         private var shareHandler: ShareHandler? = null
+        private var reportHandler: ReportHandler? = null
 
         private enum class FileType {
             OPS,
@@ -45,6 +47,15 @@ class AppUtil {
         @JvmStatic
         fun setShareHandler(handler: ShareHandler?){
             shareHandler = handler
+        }
+
+        fun getReportHandler():ReportHandler?{
+            return reportHandler
+        }
+
+        @JvmStatic
+        fun setReportHandler(handler: ReportHandler?){
+            reportHandler = handler
         }
 
         fun toMap(jsonString: String): Map<String, String> {

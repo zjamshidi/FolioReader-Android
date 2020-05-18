@@ -33,4 +33,11 @@
         app:showAsAction="ifRoom"
         tools:showAsAction="always" />
 
+    <item
+        android:id="@+id/itemReport"
+        android:icon="@drawable/ic_flag"
+        android:title="@string/menu_item_report"
+        app:showAsAction="ifRoom"
+        tools:showAsAction="always" />
+
 </menu>
