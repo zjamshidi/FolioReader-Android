@@ -32,6 +32,7 @@ import com.folioreader.model.HighlightImpl
 import com.folioreader.model.event.*
 import com.folioreader.model.locators.ReadLocator
 import com.folioreader.model.locators.SearchLocator
+import com.folioreader.model.sqlite.DbAdapter
 import com.folioreader.model.sqlite.HighLightTable
 import com.folioreader.ui.activity.FolioActivityCallback
 import com.folioreader.ui.base.HtmlTask
@@ -413,7 +414,12 @@ class FolioPageFragment : Fragment(),
                 )
             )
 
-            val rangy = HighlightUtil.generateRangyString(pageName)
+            val rangy = try {
+                HighlightUtil.generateRangyString(pageName)
+            } catch (e: NullPointerException) {
+                DbAdapter.initialize(context)
+                HighlightUtil.generateRangyString(pageName)
+            }
             this@FolioPageFragment.rangy = rangy
             if (!rangy.isEmpty())
                 loadRangy(rangy)
