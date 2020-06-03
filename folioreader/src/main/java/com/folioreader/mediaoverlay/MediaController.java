@@ -107,22 +107,22 @@ public class MediaController {
                 if (status != TextToSpeech.ERROR) {
                     mTextToSpeech.setLanguage(Locale.UK);
                     mTextToSpeech.setSpeechRate(0.70f);
-                }
 
-                mTextToSpeech.setOnUtteranceCompletedListener(
-                        new TextToSpeech.OnUtteranceCompletedListener() {
-                            @Override
-                            public void onUtteranceCompleted(String utteranceId) {
-                                ((AppCompatActivity) context).runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if (mIsSpeaking) {
-                                            callbacks.highLightTTS();
+                    mTextToSpeech.setOnUtteranceCompletedListener(
+                            new TextToSpeech.OnUtteranceCompletedListener() {
+                                @Override
+                                public void onUtteranceCompleted(String utteranceId) {
+                                    ((AppCompatActivity) context).runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (mIsSpeaking) {
+                                                callbacks.highLightTTS();
+                                            }
                                         }
-                                    }
-                                });
-                            }
-                        });
+                                    });
+                                }
+                            });
+                }
             }
         });
     }
@@ -165,7 +165,7 @@ public class MediaController {
             if (mediaPlayer != null && mediaPlayer.isPlaying()) {
                 mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(speed));
             }
-        } else {
+        } else if (mTextToSpeech != null) {
             mTextToSpeech.setSpeechRate(speed);
         }
     }
@@ -187,7 +187,7 @@ public class MediaController {
             if (mediaType == MediaType.SMIL) {
                 playSMIL();
             } else {
-                if (mTextToSpeech.isSpeaking()) {
+                if (mTextToSpeech != null && mTextToSpeech.isSpeaking()) {
                     mTextToSpeech.stop();
                     mIsSpeaking = false;
                     callbacks.resetCurrentIndex();
@@ -218,7 +218,7 @@ public class MediaController {
     }
 
     public void speakAudio(String sentence) {
-        if (mediaType == MediaType.TTS) {
+        if (mediaType == MediaType.TTS && mTextToSpeech != null) {
             HashMap<String, String> params = new HashMap<>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "stringId");
             mTextToSpeech.speak(sentence, TextToSpeech.QUEUE_FLUSH, params);
