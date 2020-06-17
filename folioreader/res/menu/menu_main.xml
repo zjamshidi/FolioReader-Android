@@ -22,7 +22,6 @@
         android:id="@+id/itemTts"
         android:icon="@drawable/man_speech_icon"
         android:title="@string/menu_item_tts"
-        android:visible="false"
         app:showAsAction="always"
         tools:showAsAction="always" />
 

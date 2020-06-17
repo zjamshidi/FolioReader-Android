@@ -92,7 +92,7 @@ public class HomeActivity extends AppCompatActivity
                 });
 
                 folioReader.setConfig(config, true)
-                        .openBook(R.raw.accessible_epub_3);
+                        .openBook(R.raw.book);
             }
         });
 
@@ -116,8 +116,8 @@ public class HomeActivity extends AppCompatActivity
                 AppUtil.setShareHandler(null);
                 AppUtil.setReportHandler(null);
 
-                folioReader.setReadLocator(readLocator);
-                folioReader.setConfig(config, true)
+                folioReader.setReadLocator(readLocator)
+                        .setConfig(config, true)
                         .openBook("file:///android_asset/TheSilverChair.epub", "New Book");
             }
         });

@@ -36,7 +36,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
@@ -90,7 +89,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var lastReadLocator: ReadLocator? = null
     private var outState: Bundle? = null
     private var savedInstanceState: Bundle? = null
-
+    private var ttsIndex : Int = 0
     private var r2StreamerServer: Server? = null
     private var pubBox: PubBox? = null
     private var spine: List<Link>? = null
@@ -123,6 +122,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         const val INTENT_EPUB_SOURCE_PATH = "com.folioreader.epub_asset_path"
         const val INTENT_EPUB_SOURCE_TYPE = "epub_source_type"
         const val EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR"
+        const val EXTRA_TTS_INDEX = "com.folioreader.extra.TTS_INDEX"
         private const val BUNDLE_READ_LOCATOR_CONFIG_CHANGE = "BUNDLE_READ_LOCATOR_CONFIG_CHANGE"
         private const val BUNDLE_DISTRACTION_FREE_MODE = "BUNDLE_DISTRACTION_FREE_MODE"
         const val EXTRA_SEARCH_ITEM = "EXTRA_SEARCH_ITEM"
@@ -189,7 +189,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     private enum class RequestCode private constructor(internal val value: Int) {
         CONTENT_HIGHLIGHT(77),
-        SEARCH(101)
+        SEARCH(101),
+        TTS(105)
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -312,8 +313,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         toolbar!!.navigationIcon = drawable
 
 
-        ((toolbar!!.getChildAt(0)) as TextView).textSize = 13f
-
         if (config.isNightMode) {
             setNightMode()
         } else {
@@ -415,7 +414,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         } else if (itemId == R.id.itemTts) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
-            showMediaController()
+
+            val chapterUrl = streamerUrl + spine!![currentChapterIndex].href!!.substring(1)
+            val ttsIntent = TTSActivity.getStartIntent(applicationContext, chapterUrl, ttsIndex);
+            this@FolioActivity.startActivityForResult(ttsIntent, RequestCode.TTS.value)
+
+            //showMediaController()
             return true
         } else if (itemId == R.id.itemShare) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
@@ -529,10 +533,6 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         val publication = pubBox!!.publication
         spine = publication.readingOrder
-        title = if (mSuggestedTitle != null)
-            mSuggestedTitle
-        else
-            publication.metadata.title
 
         if (mBookId == null) {
             if (!publication.metadata.identifier.isEmpty()) {
@@ -813,8 +813,17 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == RequestCode.TTS.value) {
+            Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.TTS)
 
-        if (requestCode == RequestCode.SEARCH.value) {
+            val lastIndex = data!!.getIntExtra(FolioReader.EXTRA_TTS_INDEX, 0)
+            if (lastIndex != 0) {
+                ttsIndex = lastIndex
+                val intent = Intent(FolioReader.ACTION_SAVE_TTS_INDEX)
+                intent.putExtra(FolioReader.EXTRA_TTS_INDEX, lastIndex)
+                LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            }
+        } else if (requestCode == RequestCode.SEARCH.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.SEARCH)
 
             if (resultCode == Activity.RESULT_CANCELED)
@@ -947,6 +956,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             if (savedInstanceState == null) {
                 readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
                 entryReadLocator = readLocator
+                ttsIndex = intent.getIntExtra(EXTRA_TTS_INDEX, 0)
             } else {
                 readLocator = savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                 lastReadLocator = readLocator

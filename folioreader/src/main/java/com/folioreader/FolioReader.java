@@ -19,6 +19,8 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
+import com.folioreader.util.TTSIndexListener;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -39,8 +41,10 @@ public class FolioReader {
     public static final String EXTRA_BOOK_ID = "com.folioreader.extra.BOOK_ID";
     public static final String EXTRA_SUGGESTED_TITLE = "com.folioreader.extra.SUGGESTED_TITLE";
     public static final String EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR";
+    public static final String EXTRA_TTS_INDEX = "com.folioreader.extra.TTS_INDEX";
     public static final String EXTRA_PORT_NUMBER = "com.folioreader.extra.PORT_NUMBER";
     public static final String ACTION_SAVE_READ_LOCATOR = "com.folioreader.action.SAVE_READ_LOCATOR";
+    public static final String ACTION_SAVE_TTS_INDEX = "com.folioreader.action.SAVE_TTS_INDEX";
     public static final String ACTION_CLOSE_FOLIOREADER = "com.folioreader.action.CLOSE_FOLIOREADER";
     public static final String ACTION_FOLIOREADER_CLOSED = "com.folioreader.action.FOLIOREADER_CLOSED";
 
@@ -50,8 +54,10 @@ public class FolioReader {
     private int portNumber = Constants.DEFAULT_PORT_NUMBER;
     private OnHighlightListener onHighlightListener;
     private ReadLocatorListener readLocatorListener;
+    private TTSIndexListener ttsIndexListener;
     private OnClosedListener onClosedListener;
     private ReadLocator readLocator;
+    private int lastTTSIndex;
 
     @Nullable
     public Retrofit retrofit;
@@ -88,6 +94,16 @@ public class FolioReader {
                     (ReadLocator) intent.getSerializableExtra(FolioReader.EXTRA_READ_LOCATOR);
             if (readLocatorListener != null)
                 readLocatorListener.saveReadLocator(readLocator);
+        }
+    };
+
+    private BroadcastReceiver ttsIndexReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            int lastTTSIndex = intent.getIntExtra(FolioReader.ACTION_SAVE_TTS_INDEX, 0);
+            if (ttsIndexListener != null)
+                ttsIndexListener.saveTTSIndex(lastTTSIndex);
         }
     };
 
@@ -128,6 +144,8 @@ public class FolioReader {
                 new IntentFilter(ACTION_SAVE_READ_LOCATOR));
         localBroadcastManager.registerReceiver(closedReceiver,
                 new IntentFilter(ACTION_FOLIOREADER_CLOSED));
+        localBroadcastManager.registerReceiver(ttsIndexReceiver,
+                new IntentFilter(ACTION_SAVE_TTS_INDEX));
     }
 
     public FolioReader openBook(String assetOrSdcardPath) {
@@ -176,6 +194,7 @@ public class FolioReader {
         intent.putExtra(Config.EXTRA_OVERRIDE_CONFIG, overrideConfig);
         intent.putExtra(EXTRA_PORT_NUMBER, portNumber);
         intent.putExtra(FolioActivity.EXTRA_READ_LOCATOR, (Parcelable) readLocator);
+        intent.putExtra(FolioActivity.EXTRA_TTS_INDEX, lastTTSIndex);
         intent.putExtra(EXTRA_SUGGESTED_TITLE, suggestedTitle);
 
         if (rawId != 0) {
@@ -246,6 +265,11 @@ public class FolioReader {
         return singleton;
     }
 
+    public FolioReader setTTSIndexListener(TTSIndexListener ttsIndexListener){
+        this.ttsIndexListener = ttsIndexListener;
+        return  singleton;
+    }
+
     public FolioReader setOnClosedListener(OnClosedListener onClosedListener) {
         this.onClosedListener = onClosedListener;
         return singleton;
@@ -253,6 +277,11 @@ public class FolioReader {
 
     public FolioReader setReadLocator(ReadLocator readLocator) {
         this.readLocator = readLocator;
+        return singleton;
+    }
+
+    public FolioReader setLastTTSIndex(int index) {
+        this.lastTTSIndex = index;
         return singleton;
     }
 
@@ -308,5 +337,6 @@ public class FolioReader {
         localBroadcastManager.unregisterReceiver(highlightReceiver);
         localBroadcastManager.unregisterReceiver(readLocatorReceiver);
         localBroadcastManager.unregisterReceiver(closedReceiver);
+        localBroadcastManager.unregisterReceiver(ttsIndexReceiver);
     }
 }

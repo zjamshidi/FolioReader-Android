@@ -118,5 +118,8 @@ dependencies {
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+
+    // jsoup HTML parser library @ https://jsoup.org/
+    implementation "org.jsoup:jsoup:$versions.jsoup"
 }
 apply from: '../folioreader/bintray/bintrayv1.gradle'
