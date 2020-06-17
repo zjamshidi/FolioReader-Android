@@ -101,7 +101,7 @@ public class FolioReader {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            int lastTTSIndex = intent.getIntExtra(FolioReader.ACTION_SAVE_TTS_INDEX, 0);
+            int lastTTSIndex = intent.getIntExtra(FolioReader.EXTRA_TTS_INDEX, 0);
             if (ttsIndexListener != null)
                 ttsIndexListener.saveTTSIndex(lastTTSIndex);
         }
