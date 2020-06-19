@@ -816,12 +816,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (requestCode == RequestCode.TTS.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.TTS)
 
-            val lastIndex = data!!.getIntExtra(FolioReader.EXTRA_TTS_INDEX, 0)
+            val lastIndex = data!!.getIntExtra(TTSActivity.INDEX_EXTRA, 0)
+            val lastSentence = data.getStringExtra(TTSActivity.SENTENCE_EXTRA)
             if (lastIndex != 0) {
                 ttsIndex = lastIndex
                 val intent = Intent(FolioReader.ACTION_SAVE_TTS_INDEX)
                 intent.putExtra(FolioReader.EXTRA_TTS_INDEX, lastIndex)
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+                currentFragment!!.scrollToSentence(lastSentence)
             }
         } else if (requestCode == RequestCode.SEARCH.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.SEARCH)

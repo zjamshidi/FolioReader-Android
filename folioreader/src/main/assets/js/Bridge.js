@@ -849,6 +849,42 @@ function onClickHtml() {
     }
 }
 
+function scrollToSentence(sentence){
+    //console.log("scroll to sentence >> " +  sentence);
+    var node = findNodeByText(sentence, document.body);
+    if(node != null){
+        var range = new Range();
+        var start = node.nodeValue.indexOf(sentence);
+        var end = start + sentence.length;
+
+        range.setStart(node, start);
+        range.setEnd(node, end);
+
+        //console.log("scroll to range >> " + range);
+        scrollToNodeOrRange(range);
+
+        console.log("scroll to sentence >> done");
+    }else{
+        console.log("scroll to sentence >> node not found ");
+    }
+}
+
+function findNodeByText(textString, node){
+    var childNodes = node.childNodes;
+    if(childNodes.length > 0){
+        for (var i = 0; i < childNodes.length; i++) {
+            var found = findNodeByText(textString, childNodes[i]);
+            if(found != null)
+                return found;
+        }
+    }else if (node.nodeType === Node.ELEMENT_NODE || node.nodeType === Node.TEXT_NODE) {
+        //console.log("scroll to sentence >> " + node.nodeValue);
+        if(node.nodeValue != null && node.nodeValue.includes(textString))
+            return node;
+    }
+    return null;
+}
+
 function computeLastReadCfi() {
 
     viewportRect = constructDOMRect(FolioWebView.getViewportRect(DisplayUnit.CSS_PX));
@@ -920,7 +956,7 @@ function scrollToCfi(cfi) {
         var $node = EPUBcfi.Interpreter.getTargetElement(cfi, document);
         scrollToNodeOrRange($node[0]);
     } catch (e) {
-        console.error("-> " + e);
+        console.error("scrollToCfi -> " + e);
     }
     LoadingView.hide();
 }

@@ -33,10 +33,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
+    public final static String INDEX_EXTRA = "TTS_ACTIVITY_INDEX_EXTRA";
+    public final static String SENTENCE_EXTRA = "TTS_ACTIVITY_SENTENCE_EXTRA";
     private final static String TAG = TTSActivity.class.getSimpleName();
     private final static String URL_EXTRA = "TTS_ACTIVITY_URL_EXTRA";
-    private final static String INDEX_EXTRA = "TTS_ACTIVITY_INDEX_EXTRA";
-
     private int highlightColor;
 
     private TextToSpeechWrapper mTtsWrapper;
@@ -156,7 +156,9 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
 
     private void closeActivity() {
         Intent result = new Intent();
-        result.putExtra(FolioReader.EXTRA_TTS_INDEX, mSentenceNumber);
+        result.putExtra(INDEX_EXTRA, mSentenceNumber);
+        if (mSentenceNumber >= 0 && mSentenceNumber < mSentences.size())
+            result.putExtra(SENTENCE_EXTRA, mSentences.get(mSentenceNumber));
         setResult(RESULT_OK, result);
         finish();
     }

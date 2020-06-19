@@ -269,6 +269,11 @@ class FolioPageFragment : Fragment(),
         }
     }
 
+    fun scrollToSentence(sentence : String?) {
+        if (sentence != null && sentence.isNotEmpty())
+            mWebview!!.loadUrl(String.format(getString(R.string.callScrollToSentence), sentence))
+    }
+
     fun scrollToAnchorId(href: String) {
 
         if (!TextUtils.isEmpty(href) && href.indexOf('#') != -1) {
