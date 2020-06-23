@@ -5,9 +5,16 @@
     tools:context="com.folioreader.ui.activity.FolioActivity">
 
     <item
-        android:id="@+id/itemSearch"
-        android:icon="@drawable/ic_search"
-        android:title="@string/menu_item_search"
+        android:id="@+id/itemTts"
+        android:icon="@drawable/man_speech_icon"
+        android:title="@string/menu_item_tts"
+        app:showAsAction="always"
+        tools:showAsAction="always" />
+
+    <item
+        android:id="@+id/itemShare"
+        android:icon="@drawable/ic_share"
+        android:title="@string/menu_item_share"
         app:showAsAction="always"
         tools:showAsAction="always" />
 
@@ -19,16 +26,9 @@
         tools:showAsAction="always" />
 
     <item
-        android:id="@+id/itemTts"
-        android:icon="@drawable/man_speech_icon"
-        android:title="@string/menu_item_tts"
-        app:showAsAction="always"
-        tools:showAsAction="always" />
-
-    <item
-        android:id="@+id/itemShare"
-        android:icon="@drawable/ic_share"
-        android:title="@string/menu_item_share"
+        android:id="@+id/itemSearch"
+        android:icon="@drawable/ic_search"
+        android:title="@string/menu_item_search"
         app:showAsAction="always"
         tools:showAsAction="always" />
 
