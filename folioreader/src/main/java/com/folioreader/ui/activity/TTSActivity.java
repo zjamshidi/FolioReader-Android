@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.folioreader.Config;
-import com.folioreader.FolioReader;
 import com.folioreader.R;
 import com.folioreader.tts.HTMLParser;
 import com.folioreader.tts.TextToSpeechWrapper;
@@ -33,20 +32,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
-    public final static String INDEX_EXTRA = "TTS_ACTIVITY_INDEX_EXTRA";
+    public final static String RESUME_POINT_EXTRA = "TTS_ACTIVITY_RESUME_POINT_EXTRA";
     public final static String SENTENCE_EXTRA = "TTS_ACTIVITY_SENTENCE_EXTRA";
     private final static String TAG = TTSActivity.class.getSimpleName();
-    private final static String URL_EXTRA = "TTS_ACTIVITY_URL_EXTRA";
+    private final static String STREAM_URL_EXTRA = "TTS_STREAM_URL_EXTRA";
+    private final static String CHAPTER_URLS_EXTRA = "TTS_CHAPTER_URLS_EXTRA";
+    private final static String CURRENT_CHAPTER_EXTRA = "TTS_CURRENT_CHAPTER_EXTRA";
+    //
+    private String streamUrl;
+    private ArrayList<String> chapterUrlList;
+    private int currentChapterIndex;
+    ///
     private int highlightColor;
-
+    private TextView mContentView;
+    private ScrollView mScrollLayout;
+    private ImageButton mPlayBtn;
+    //
     private TextToSpeechWrapper mTtsWrapper;
     private int mSentenceNumber = 0;
     private List<String> mSentences;
     private boolean mIsSpeaking = false;
     private String mContentText;
-    private TextView mContentView;
-    private ScrollView mScrollLayout;
-    private ImageButton mPlayBtn;
     private TextToSpeech.OnUtteranceCompletedListener mCompletedListener = new TextToSpeech.OnUtteranceCompletedListener() {
 
         @Override
@@ -56,10 +62,14 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
         }
     };
 
-    public static Intent getStartIntent(Context context, String url, int index) {
+    public static Intent getStartIntent(Context context,
+                                        String streamUrl, ArrayList<String> chapterUrlList,
+                                        int currentChapterIndex, String resumePoint) {
         Intent startIntent = new Intent(context, TTSActivity.class);
-        startIntent.putExtra(URL_EXTRA, url);
-        startIntent.putExtra(INDEX_EXTRA, index);
+        startIntent.putExtra(STREAM_URL_EXTRA, streamUrl);
+        startIntent.putExtra(CHAPTER_URLS_EXTRA, chapterUrlList);
+        startIntent.putExtra(CURRENT_CHAPTER_EXTRA, currentChapterIndex);
+        startIntent.putExtra(RESUME_POINT_EXTRA, resumePoint);
         return startIntent;
     }
 
@@ -68,16 +78,23 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tts);
 
-        String chapterUrl = getIntent().getStringExtra(URL_EXTRA);
-        if (chapterUrl == null) {
-            Log.e(TAG, "url is not provided");
+        if (getIntent() != null) {
+            Intent intent = getIntent();
+            streamUrl = intent.getStringExtra(STREAM_URL_EXTRA);
+            chapterUrlList = intent.getStringArrayListExtra(CHAPTER_URLS_EXTRA);
+            currentChapterIndex = intent.getIntExtra(CURRENT_CHAPTER_EXTRA, 0);
+            TTSResumePoint resumePoint = TTSResumePoint.parseResumePoint(getIntent().getStringExtra(RESUME_POINT_EXTRA));
+            if (resumePoint.getChapterIndex() == currentChapterIndex)
+                mSentenceNumber = resumePoint.getSentenceIndex();
+            else
+                mSentenceNumber = 0;
+        }
+
+        if (streamUrl == null || chapterUrlList == null || chapterUrlList.isEmpty()) {
+            Log.e(TAG, "url info is not provided");
             finish();
             return;
         }
-
-        int index = getIntent().getIntExtra(INDEX_EXTRA, 0);
-        if (index < 0) index = 0;
-        mSentenceNumber = index;
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
@@ -88,15 +105,10 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
 
         mContentView = findViewById(R.id.mainContent);
         mScrollLayout = findViewById(R.id.layout_summary);
-        mSentences = new ArrayList<>();
-        mContentText = "";
-        new HtmlTask(this).execute(chapterUrl);
 
         mTtsWrapper = new TextToSpeechWrapper(TTSActivity.this);
 
         mPlayBtn = findViewById(R.id.play_pause_button);
-        mPlayBtn.setEnabled(false);
-
         mPlayBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -138,6 +150,17 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
         highlightColor = ContextCompat.getColor(this,
                 R.color.highlight_yellow);
 
+        initContent(mSentenceNumber);
+
+    }
+
+    private void initContent(int sentenceIndex) {
+        mSentences = new ArrayList<>();
+        mContentText = "";
+        String chapterUrl = streamUrl + chapterUrlList.get(currentChapterIndex).substring(1);
+        mSentenceNumber = sentenceIndex;
+        new HtmlTask(this).execute(chapterUrl);
+        mPlayBtn.setEnabled(false);
     }
 
     @Override
@@ -156,7 +179,7 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
 
     private void closeActivity() {
         Intent result = new Intent();
-        result.putExtra(INDEX_EXTRA, mSentenceNumber);
+        result.putExtra(RESUME_POINT_EXTRA, new TTSResumePoint(currentChapterIndex, mSentenceNumber).serialize());
         if (mSentenceNumber >= 0 && mSentenceNumber < mSentences.size())
             result.putExtra(SENTENCE_EXTRA, mSentences.get(mSentenceNumber));
         setResult(RESULT_OK, result);
@@ -174,7 +197,12 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
                 highlight(sentence);
                 scrollTo(sentence);
             } else {
-                pauseTTS();
+                if (currentChapterIndex < chapterUrlList.size()) {
+                    currentChapterIndex++;
+                    initContent(0);
+                } else {
+                    pauseTTS();
+                }
             }
         }
     }
@@ -216,10 +244,53 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
             mSentenceNumber = 0;
         mContentView.setText(mContentText);
         mPlayBtn.setEnabled(true);
+        if (mIsSpeaking) {
+            speak();
+        }
     }
 
     @Override
     public void onError() {
         Log.e(TAG, "couldn't load the content");
+    }
+
+    static class TTSResumePoint {
+        private int chapterIndex;
+        private int sentenceIndex;
+
+        public TTSResumePoint(int chapterIndex, int sentenceIndex) {
+            this.chapterIndex = chapterIndex;
+            this.sentenceIndex = sentenceIndex;
+        }
+
+        public static TTSResumePoint parseResumePoint(String resumeString) {
+            TTSResumePoint resumePoint = new TTSResumePoint(-1, 0);
+            if (resumeString == null) {
+                return resumePoint;
+            }
+            String[] tokens = resumeString.split(":");
+            if (tokens.length != 2) {
+                return resumePoint;
+            }
+            try {
+                int resumeChapter = Integer.parseInt(tokens[0]);
+                int resumeSentence = Integer.parseInt(tokens[1]);
+                return new TTSResumePoint(resumeChapter, resumeSentence);
+            } catch (NumberFormatException ignore) {
+            }
+            return resumePoint;
+        }
+
+        public int getChapterIndex() {
+            return chapterIndex;
+        }
+
+        public int getSentenceIndex() {
+            return sentenceIndex;
+        }
+
+        public String serialize() {
+            return chapterIndex + ":" + sentenceIndex;
+        }
     }
 }

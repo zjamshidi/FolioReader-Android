@@ -3,8 +3,8 @@ package com.folioreader.util;
 /**
  * Created by Zahra Jamshidi on 6/17/2020.
  */
-public interface TTSIndexListener {
+public interface TTSLocatorListener {
 
-    void saveTTSIndex(int lastIndex);
+    void saveTTSLocator(String locator);
 }
 

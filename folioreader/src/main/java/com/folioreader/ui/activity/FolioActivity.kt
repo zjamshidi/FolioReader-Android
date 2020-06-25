@@ -90,7 +90,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var lastReadLocator: ReadLocator? = null
     private var outState: Bundle? = null
     private var savedInstanceState: Bundle? = null
-    private var ttsIndex : Int = 0
+    private var ttsResumePoint : String = ""
     private var r2StreamerServer: Server? = null
     private var pubBox: PubBox? = null
     private var spine: List<Link>? = null
@@ -123,7 +123,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         const val INTENT_EPUB_SOURCE_PATH = "com.folioreader.epub_asset_path"
         const val INTENT_EPUB_SOURCE_TYPE = "epub_source_type"
         const val EXTRA_READ_LOCATOR = "com.folioreader.extra.READ_LOCATOR"
-        const val EXTRA_TTS_INDEX = "com.folioreader.extra.TTS_INDEX"
+        const val EXTRA_TTS_LOCATOR = "com.folioreader.extra.TTS_LOCATOR"
         private const val BUNDLE_READ_LOCATOR_CONFIG_CHANGE = "BUNDLE_READ_LOCATOR_CONFIG_CHANGE"
         private const val BUNDLE_DISTRACTION_FREE_MODE = "BUNDLE_DISTRACTION_FREE_MODE"
         const val EXTRA_SEARCH_ITEM = "EXTRA_SEARCH_ITEM"
@@ -416,8 +416,9 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemTts) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
 
-            val chapterUrl = streamerUrl + spine!![currentChapterIndex].href!!.substring(1)
-            val ttsIntent = TTSActivity.getStartIntent(applicationContext, chapterUrl, ttsIndex);
+            val chapterUrlList = ArrayList<String ?>(spine!!.size)
+            spine!!.forEach { chapterUrlList.add(it.href) }
+            val ttsIntent = TTSActivity.getStartIntent(applicationContext, streamerUrl, chapterUrlList, currentChapterIndex, ttsResumePoint);
             this@FolioActivity.startActivityForResult(ttsIntent, RequestCode.TTS.value)
 
             //showMediaController()
@@ -817,14 +818,21 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         if (requestCode == RequestCode.TTS.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.TTS)
 
-            val lastIndex = data!!.getIntExtra(TTSActivity.INDEX_EXTRA, 0)
+            val resumePointStr = data!!.getStringExtra(TTSActivity.RESUME_POINT_EXTRA)
             val lastSentence = data.getStringExtra(TTSActivity.SENTENCE_EXTRA)
-            if (lastIndex != 0) {
-                ttsIndex = lastIndex
-                val intent = Intent(FolioReader.ACTION_SAVE_TTS_INDEX)
-                intent.putExtra(FolioReader.EXTRA_TTS_INDEX, lastIndex)
+            val resumePoint = TTSActivity.TTSResumePoint.parseResumePoint(resumePointStr)
+            if (resumePoint.chapterIndex > 0) {
+                ttsResumePoint = resumePointStr
+
+                if (mFolioPageViewPager == null) return
+                currentChapterIndex = resumePoint.chapterIndex
+                mFolioPageViewPager!!.currentItem = currentChapterIndex
+                val folioPageFragment = currentFragment ?: return
+                folioPageFragment!!.scrollToSentence(lastSentence)
+
+                val intent = Intent(FolioReader.ACTION_SAVE_TTS_LOCATOR)
+                intent.putExtra(FolioReader.EXTRA_TTS_LOCATOR, resumePointStr)
                 LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-                currentFragment!!.scrollToSentence(lastSentence)
             }
         } else if (requestCode == RequestCode.SEARCH.value) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.SEARCH)
@@ -959,7 +967,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             if (savedInstanceState == null) {
                 readLocator = intent.getParcelableExtra(FolioActivity.EXTRA_READ_LOCATOR)
                 entryReadLocator = readLocator
-                ttsIndex = intent.getIntExtra(EXTRA_TTS_INDEX, 0)
+                ttsResumePoint = intent.getStringExtra(EXTRA_TTS_LOCATOR)
             } else {
                 readLocator = savedInstanceState!!.getParcelable(BUNDLE_READ_LOCATOR_CONFIG_CHANGE)
                 lastReadLocator = readLocator

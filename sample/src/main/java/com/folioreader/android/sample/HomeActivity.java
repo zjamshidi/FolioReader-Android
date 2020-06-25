@@ -36,6 +36,7 @@ import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.util.AppUtil;
 import com.folioreader.util.OnHighlightListener;
 import com.folioreader.util.ReadLocatorListener;
+import com.folioreader.util.TTSLocatorListener;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -45,10 +46,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HomeActivity extends AppCompatActivity
-        implements OnHighlightListener, ReadLocatorListener, FolioReader.OnClosedListener {
+        implements OnHighlightListener, ReadLocatorListener, FolioReader.OnClosedListener, TTSLocatorListener {
 
     private static final String LOG_TAG = HomeActivity.class.getSimpleName();
     private FolioReader folioReader;
+
+    private ReadLocator resumePoint;
+    private String ttsResumePoint;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -57,7 +61,6 @@ public class HomeActivity extends AppCompatActivity
 
         folioReader = FolioReader.get()
                 .setOnHighlightListener(this)
-                .setReadLocatorListener(this)
                 .setOnClosedListener(this);
 
         getHighlightsAndSave();
@@ -92,16 +95,17 @@ public class HomeActivity extends AppCompatActivity
                 });
 
                 folioReader.setConfig(config, true)
-                        .openBook(R.raw.book);
+                        .setTTSLocatorListener(HomeActivity.this)
+                        .setTTSLocator(ttsResumePoint)
+                        .setReadLocator(resumePoint)
+                        .setReadLocatorListener(HomeActivity.this)
+                        .openBook(R.raw.book, "BOOK TITLE");
             }
         });
 
         findViewById(R.id.btn_assest).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                ReadLocator readLocator = getLastReadLocator();
-
                 Config config = AppUtil.getSavedConfig(getApplicationContext());
                 if (config == null)
                     config = new Config();
@@ -116,22 +120,22 @@ public class HomeActivity extends AppCompatActivity
                 AppUtil.setShareHandler(null);
                 AppUtil.setReportHandler(null);
 
-                folioReader.setReadLocator(readLocator)
-                        .setConfig(config, true)
+                folioReader.setConfig(config, true)
                         .openBook("file:///android_asset/TheSilverChair.epub", "New Book");
             }
         });
     }
 
-    private ReadLocator getLastReadLocator() {
-
-        String jsonString = loadAssetTextAsString("Locators/LastReadLocators/last_read_locator_1.json");
-        return ReadLocator.fromJson(jsonString);
+    @Override
+    public void saveTTSLocator(String ttsLocator) {
+        Log.i(LOG_TAG, "-> saveTTSLocator -> " + ttsLocator);
+        ttsResumePoint = ttsLocator;
     }
 
     @Override
     public void saveReadLocator(ReadLocator readLocator) {
         Log.i(LOG_TAG, "-> saveReadLocator -> " + readLocator.toJson());
+        resumePoint = readLocator;
     }
 
     /*
