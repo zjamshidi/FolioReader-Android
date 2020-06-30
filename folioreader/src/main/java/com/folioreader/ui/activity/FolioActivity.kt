@@ -416,8 +416,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemTts) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
 
-            AppUtil.getFirebaseAnalytics()?.logEvent("temp",  Bundle());
-            AppUtil.getAmplitudeAnalytics()?.track("temp");
+            AppUtil.logEvent("tapped_on_tts")
 
             val chapterUrlList = ArrayList<String ?>(spine!!.size)
             spine!!.forEach { chapterUrlList.add(it.href) }

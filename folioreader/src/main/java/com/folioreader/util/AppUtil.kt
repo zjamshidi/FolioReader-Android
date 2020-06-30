@@ -3,6 +3,7 @@ package com.folioreader.util
 import android.app.Activity
 import android.content.Context
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -14,6 +15,7 @@ import com.folioreader.ShareHandler
 import com.folioreader.util.SharedPreferenceUtil.getSharedPreferencesString
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.segment.analytics.Analytics
+import com.segment.analytics.Properties
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -36,8 +38,10 @@ class AppUtil {
         private var shareHandler: ShareHandler? = null
         private var reportHandler: ReportHandler? = null
 
-        private  var firebaseAnalytics:FirebaseAnalytics? = null
-        private var amplitudeAnalytics: Analytics ? = null
+        private var firebaseAnalytics: FirebaseAnalytics? = null
+        private var firebaseParams: Bundle? = null
+        private var segmentAnalytics: Analytics? = null
+        private var segmentParams: Properties? = null
 
         private enum class FileType {
             OPS,
@@ -64,21 +68,20 @@ class AppUtil {
         }
 
         @JvmStatic
-        fun setFirebaseAnalytics(analytics: FirebaseAnalytics?) {
+        fun setFirebaseAnalytics(analytics: FirebaseAnalytics, param: Bundle?) {
             firebaseAnalytics = analytics
-        }
-
-        fun getFirebaseAnalytics(): FirebaseAnalytics? {
-            return  firebaseAnalytics
+            firebaseParams = param
         }
 
         @JvmStatic
-        fun setAmplitudeAnalytics(analytics: Analytics?) {
-            amplitudeAnalytics = analytics
+        fun setSegmentAnalytics(analytics: Analytics, param: Properties?) {
+            segmentAnalytics = analytics
+            segmentParams = param
         }
 
-        fun getAmplitudeAnalytics(): Analytics? {
-            return  amplitudeAnalytics
+        fun logEvent(eventName: String) {
+            firebaseAnalytics?.logEvent(eventName, firebaseParams)
+            segmentAnalytics?.track(eventName, segmentParams)
         }
 
         fun toMap(jsonString: String): Map<String, String> {
