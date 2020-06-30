@@ -74,6 +74,11 @@ android {
     checkstyle {
         ignoreFailures = true
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 apply from: '../folioreader/bintray/installv1.gradle'
@@ -118,6 +123,9 @@ dependencies {
 
     // Lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:$versions.lifecycle"
+
+    implementation 'com.segment.analytics.android:analytics:4.7.1'
+    implementation 'com.google.firebase:firebase-analytics:17.4.3'
 
     // jsoup HTML parser library @ https://jsoup.org/
     implementation "org.jsoup:jsoup:$versions.jsoup"

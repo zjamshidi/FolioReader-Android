@@ -12,6 +12,8 @@ import com.folioreader.Constants
 import com.folioreader.ReportHandler
 import com.folioreader.ShareHandler
 import com.folioreader.util.SharedPreferenceUtil.getSharedPreferencesString
+import com.google.firebase.analytics.FirebaseAnalytics
+import com.segment.analytics.Analytics
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -33,6 +35,9 @@ class AppUtil {
 
         private var shareHandler: ShareHandler? = null
         private var reportHandler: ReportHandler? = null
+
+        private  var firebaseAnalytics:FirebaseAnalytics? = null
+        private var amplitudeAnalytics: Analytics ? = null
 
         private enum class FileType {
             OPS,
@@ -56,6 +61,24 @@ class AppUtil {
         @JvmStatic
         fun setReportHandler(handler: ReportHandler?){
             reportHandler = handler
+        }
+
+        @JvmStatic
+        fun setFirebaseAnalytics(analytics: FirebaseAnalytics?) {
+            firebaseAnalytics = analytics
+        }
+
+        fun getFirebaseAnalytics(): FirebaseAnalytics? {
+            return  firebaseAnalytics
+        }
+
+        @JvmStatic
+        fun setAmplitudeAnalytics(analytics: Analytics?) {
+            amplitudeAnalytics = analytics
+        }
+
+        fun getAmplitudeAnalytics(): Analytics? {
+            return  amplitudeAnalytics
         }
 
         fun toMap(jsonString: String): Map<String, String> {
