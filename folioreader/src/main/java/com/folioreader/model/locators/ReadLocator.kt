@@ -63,7 +63,7 @@ open class ReadLocator : Locator, Parcelable {
                     .reader()
                     .forType(ReadLocator::class.java)
                     .readValue(json)
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e(LOG_TAG, "-> ", e)
                 null
             }
@@ -91,7 +91,7 @@ open class ReadLocator : Locator, Parcelable {
             val objectMapper = ObjectMapper()
             objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL)
             objectMapper.writeValueAsString(this)
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(LOG_TAG, "-> ", e)
             null
         }
