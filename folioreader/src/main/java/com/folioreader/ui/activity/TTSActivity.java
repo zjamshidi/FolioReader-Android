@@ -3,7 +3,6 @@ package com.folioreader.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
@@ -123,9 +122,9 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
             UiUtil.setColorIntToDrawable(mConfig.getThemeColor(), ((ImageView) findViewById(R.id.btn_close)).getDrawable());
 
         if (mIsNightMode) {
-            findViewById(R.id.toolbar).setBackgroundColor(Color.BLACK);
-            findViewById(R.id.layout_summary).setBackgroundColor(Color.BLACK);
-            mContentView.setTextColor(Color.WHITE);
+            findViewById(R.id.toolbar).setBackgroundColor(ContextCompat.getColor(this, R.color.black));
+            findViewById(R.id.layout_summary).setBackgroundColor(ContextCompat.getColor(this, R.color.night_background_color));
+            mContentView.setTextColor(ContextCompat.getColor(this, R.color.night_default_font_color));
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
