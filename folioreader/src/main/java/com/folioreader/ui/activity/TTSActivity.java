@@ -1,11 +1,13 @@
 package com.folioreader.ui.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
+import android.speech.tts.Voice;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
@@ -15,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -29,6 +32,7 @@ import com.folioreader.util.UiUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
     public final static String RESUME_POINT_EXTRA = "TTS_ACTIVITY_RESUME_POINT_EXTRA";
@@ -60,6 +64,7 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
             speak();
         }
     };
+    private int checkedItem;
 
     public static Intent getStartIntent(Context context,
                                         String streamUrl, ArrayList<String> chapterUrlList,
@@ -115,6 +120,50 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
                     speak();
                 else
                     pauseTTS();
+            }
+        });
+
+        findViewById(R.id.voice_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                List<Voice> voices = mTtsWrapper.getVoices();
+                Voice selected = mTtsWrapper.getCurrentVoice();
+                if (voices == null || selected == null)
+                    return;
+
+                String[] animals = new String[voices.size()];
+                int index = 0;
+                checkedItem = -1;
+                for (Voice v : voices) {
+                    animals[index] = v.getName();
+                    if (Objects.equals(v.getName(), selected.getName()))
+                        checkedItem = index;
+                    index++;
+                }
+
+                // setup the alert builder
+                AlertDialog.Builder builder = new AlertDialog.Builder(TTSActivity.this);
+                builder.setTitle("Select a voice");
+                // add a radio button list
+                builder.setSingleChoiceItems(animals, checkedItem, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // user checked an item
+                        checkedItem = which;
+                    }
+                });
+                // add OK and Cancel buttons
+                builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int whichBtn) {
+                        if(checkedItem != -1)
+                        mTtsWrapper.setVoice(voices.get(checkedItem));
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                // create and show the alert dialog
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
 
@@ -254,8 +303,8 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
     }
 
     static class TTSResumePoint {
-        private int chapterIndex;
-        private int sentenceIndex;
+        private final int chapterIndex;
+        private final int sentenceIndex;
 
         public TTSResumePoint(int chapterIndex, int sentenceIndex) {
             this.chapterIndex = chapterIndex;

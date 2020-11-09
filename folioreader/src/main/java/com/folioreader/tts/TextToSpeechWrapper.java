@@ -5,8 +5,9 @@ import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -29,11 +30,7 @@ public class TextToSpeechWrapper {
                 @Override
                 public void onInit(int status) {
                     if (status != TextToSpeech.ERROR) {
-                        if (mTts.isLanguageAvailable(Locale.UK) != 0) {
-                            mTts.setLanguage(Locale.UK);
-                        } else {
-                            mTts.setLanguage(Locale.US);
-                        }
+                        mTts.setLanguage(Locale.US);
                         mTts.setOnUtteranceCompletedListener(mCompletedListener);
                     }
                 }
@@ -56,17 +53,32 @@ public class TextToSpeechWrapper {
         Log.d("TextToSpeechWrapper", "tts> speak '" + text + "'");
         if (mTts != null) {
             mExternalCompletedListener = listener;
-            Set<String> a = new HashSet<>();
-            a.add("male");//here you can give male if you want to select male voice.
-            //Voice v=new Voice("en-us-x-sfg#female_2-local",new Locale("en","US"),400,200,true,a);
-            Voice v = new Voice("en-us-x-sfg#male_2-local", new Locale("en", "US"), 400, 200, true, a);
-            mTts.setVoice(v);
-
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "end");
             mTts.speak(text, TextToSpeech.QUEUE_ADD, params);
             mTts.playSilence(200, TextToSpeech.QUEUE_ADD, null);
         }
+    }
+
+    public void setVoice(Voice voice) {
+        mTts.setVoice(voice);
+    }
+
+    public List<Voice> getVoices() {
+        Set<Voice> voices = mTts != null ? mTts.getVoices() : null;
+        List<Voice> possible = new ArrayList<>();
+        if (voices == null)
+            return possible;
+
+        for (Voice v : voices) {
+            if (v.getLocale() == Locale.US)
+                possible.add(v);
+        }
+        return possible;
+    }
+
+    public Voice getCurrentVoice() {
+        return mTts != null ? mTts.getVoice() : null;
     }
 
     public void stop() {
