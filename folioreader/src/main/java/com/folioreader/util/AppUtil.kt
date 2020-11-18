@@ -49,21 +49,21 @@ class AppUtil {
             NONE
         }
 
-        fun getShareHandler():ShareHandler?{
+        fun getShareHandler(): ShareHandler? {
             return shareHandler
         }
 
         @JvmStatic
-        fun setShareHandler(handler: ShareHandler?){
+        fun setShareHandler(handler: ShareHandler?) {
             shareHandler = handler
         }
 
-        fun getReportHandler():ReportHandler?{
+        fun getReportHandler(): ReportHandler? {
             return reportHandler
         }
 
         @JvmStatic
-        fun setReportHandler(handler: ReportHandler?){
+        fun setReportHandler(handler: ReportHandler?) {
             reportHandler = handler
         }
 
@@ -111,7 +111,8 @@ class AppUtil {
         fun charsetNameForURLConnection(connection: URLConnection): String {
             // see https://stackoverflow.com/a/3934280/1027646
             val contentType = connection.contentType
-            val values = contentType.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+            val values =
+                contentType.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
             var charset: String? = null
 
             for (_value in values) {
@@ -136,6 +137,7 @@ class AppUtil {
             return simpleDateFormat.format(hightlightDate)
         }
 
+        @JvmStatic
         fun saveConfig(context: Context?, config: Config) {
             val obj = JSONObject()
             try {
@@ -154,6 +156,7 @@ class AppUtil {
                     Config.CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED,
                     config.isDistractionFreeModeEnabled
                 )
+                obj.put(Config.CONFIG_VOICE, config.voiceName)
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()
@@ -200,7 +203,8 @@ class AppUtil {
                 }
             }
 
-            val index = action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
+            val index =
+                action and MotionEvent.ACTION_POINTER_INDEX_MASK shr MotionEvent.ACTION_POINTER_INDEX_SHIFT
             when (action and MotionEvent.ACTION_MASK) {
                 MotionEvent.ACTION_POINTER_DOWN -> return "ACTION_POINTER_DOWN($index)"
                 MotionEvent.ACTION_POINTER_UP -> return "ACTION_POINTER_UP($index)"

@@ -1,17 +1,23 @@
 package com.folioreader.tts;
 
 import android.app.Activity;
+import android.content.Context;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
 import android.util.Log;
+
+import com.folioreader.Config;
+import com.folioreader.util.AppUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Set;
 
 public class TextToSpeechWrapper {
+    private Context mContext;
     private TextToSpeech mTts;
     private TextToSpeech.OnUtteranceCompletedListener mExternalCompletedListener;
     private TextToSpeech.OnUtteranceCompletedListener mCompletedListener = new TextToSpeech.OnUtteranceCompletedListener() {
@@ -38,6 +44,7 @@ public class TextToSpeechWrapper {
 
     public TextToSpeechWrapper(Activity activity) {
         if (mTts == null) {
+            mContext = activity;
             mTts = new TextToSpeech(activity, mOnInitListener);
         }
     }
@@ -53,6 +60,19 @@ public class TextToSpeechWrapper {
         Log.d("TextToSpeechWrapper", "tts> speak '" + text + "'");
         if (mTts != null) {
             mExternalCompletedListener = listener;
+            Config config = AppUtil.getSavedConfig(mContext);
+            String lastSelectedVoiceName = config.getVoiceName();
+
+            Voice lastSelectedVoice = null;
+            for (Voice v : mTts.getVoices()) {
+                if (Objects.equals(v.getName(), lastSelectedVoiceName)) {
+                    lastSelectedVoice = v;
+                    break;
+                }
+            }
+            if (lastSelectedVoice != null)
+                mTts.setVoice(lastSelectedVoice);
+
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "end");
             mTts.speak(text, TextToSpeech.QUEUE_ADD, params);

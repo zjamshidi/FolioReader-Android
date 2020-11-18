@@ -156,8 +156,13 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
                 builder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int whichBtn) {
-                        if(checkedItem != -1)
-                        mTtsWrapper.setVoice(voices.get(checkedItem));
+                        if (checkedItem != -1) {
+                            Voice voice = voices.get(checkedItem);
+                            Config config = AppUtil.getSavedConfig(TTSActivity.this);
+                            config.setVoiceName(voice.getName());
+                            AppUtil.saveConfig(TTSActivity.this, config);
+                            mTtsWrapper.setVoice(voice);
+                        }
                     }
                 });
                 builder.setNegativeButton("Cancel", null);

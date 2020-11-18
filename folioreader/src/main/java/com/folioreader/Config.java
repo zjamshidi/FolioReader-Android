@@ -30,6 +30,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED = "is_distraction_free_mode_enabled";
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
+    public static final String CONFIG_VOICE = "voice_name";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
     private static final Direction DEFAULT_DIRECTION = Direction.VERTICAL;
     private static final int DEFAULT_THEME_COLOR_INT =
@@ -48,6 +49,7 @@ public class Config implements Parcelable {
     private boolean distractionFreeModeEnabled = true;
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
+    private String voiceName = null;
 
     /**
      * Reading modes available
@@ -94,6 +96,7 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (copyEnabled ? 1 : 0));
         dest.writeByte((byte) (searchEnabled ? 1 : 0));
         dest.writeByte((byte) (distractionFreeModeEnabled ? 1 : 0));
+        dest.writeString(voiceName);
     }
 
     protected Config(Parcel in) {
@@ -109,6 +112,7 @@ public class Config implements Parcelable {
         copyEnabled = in.readByte() != 0;
         searchEnabled = in.readByte() != 0;
         distractionFreeModeEnabled = in.readByte() != 0;
+        voiceName = in.readString();
     }
 
     public Config() {
@@ -133,6 +137,8 @@ public class Config implements Parcelable {
             searchEnabled =jsonObject.optBoolean(CONFIG_IS_SEARCH_ENABLED);
         if (jsonObject.has(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED))
             distractionFreeModeEnabled = jsonObject.optBoolean(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED);
+        if (jsonObject.has(CONFIG_VOICE))
+            voiceName = jsonObject.optString(CONFIG_VOICE);
     }
 
     public static Direction getDirectionFromString(final String LOG_TAG, String directionString) {
@@ -353,6 +359,14 @@ public class Config implements Parcelable {
         }
 
         return this;
+    }
+
+    public String getVoiceName() {
+        return voiceName;
+    }
+
+    public void setVoiceName(String voiceName) {
+        this.voiceName = voiceName;
     }
 
     @Override
