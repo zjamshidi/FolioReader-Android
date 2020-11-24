@@ -57,7 +57,7 @@ public class TextToSpeechWrapper {
     }
 
     public void speak(String text, TextToSpeech.OnUtteranceCompletedListener listener) {
-        Log.d("TextToSpeechWrapper", "tts> speak '" + text + "'");
+//        Log.d("TextToSpeechWrapper", "tts> speak '" + text + "'");
         if (mTts != null) {
             mExternalCompletedListener = listener;
             Config config = AppUtil.getSavedConfig(mContext);

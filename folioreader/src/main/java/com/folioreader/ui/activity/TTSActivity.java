@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.Voice;
+import android.text.Html;
 import android.text.SpannableString;
 import android.text.style.BackgroundColorSpan;
 import android.util.Log;
@@ -143,7 +144,7 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
 
                 // setup the alert builder
                 AlertDialog.Builder builder = new AlertDialog.Builder(TTSActivity.this);
-                builder.setTitle("Select a voice");
+                builder.setTitle("Select Voice");
                 // add a radio button list
                 builder.setSingleChoiceItems(animals, checkedItem, new DialogInterface.OnClickListener() {
                     @Override
@@ -166,6 +167,13 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
                     }
                 });
                 builder.setNegativeButton("Cancel", null);
+
+                builder.setNeutralButton("Add voice", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        showHelpDialog();
+                    }
+                });
                 // create and show the alert dialog
                 AlertDialog dialog = builder.create();
                 dialog.show();
@@ -205,6 +213,30 @@ public class TTSActivity extends AppCompatActivity implements HtmlTaskCallback {
 
         initContent(mSentenceNumber);
 
+    }
+
+    private void showHelpDialog() {
+        // setup the alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Add Voice");
+        builder.setMessage(Html.fromHtml("To add more voices:\n" +
+                "<ol>\n" +
+                "  <li>&nbsp;Open your device's Settings app.</li>\n" +
+                "  <li>&nbsp;Select <strong>Accessibility</strong>, then <strong>Text-to-speech output</strong>.</li>\n" +
+                "  <li>&nbsp;Select Settings, then <strong>Install voice data</strong>.</li>\n" +
+                "</ol>"));
+        // add the buttons
+        builder.setPositiveButton("Open Settings", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent = new Intent(android.provider.Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                startActivityForResult(intent, 0);
+            }
+        });
+        builder.setNegativeButton("OK", null);
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void initContent(int sentenceIndex) {
