@@ -1080,7 +1080,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         when (requestCode) {
-            Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults.isNotEmpty() &&  grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupBook()
             } else {
                 Toast.makeText(this, getString(R.string.cannot_access_epub_message), Toast.LENGTH_LONG).show()
