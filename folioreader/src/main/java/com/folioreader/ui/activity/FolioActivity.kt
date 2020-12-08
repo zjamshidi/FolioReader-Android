@@ -90,7 +90,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     private var lastReadLocator: ReadLocator? = null
     private var outState: Bundle? = null
     private var savedInstanceState: Bundle? = null
-    private var ttsResumePoint : String? = ""
+    private var ttsResumePoint: String? = ""
     private var r2StreamerServer: Server? = null
     private var pubBox: PubBox? = null
     private var spine: List<Link>? = null
@@ -478,6 +478,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             onBookInitSuccess()
         } catch (e: Exception) {
             Log.e(LOG_TAG, "-> Failed to initialize book", e)
+            AppUtil.logEvent("epub_init_failed")
             onBookInitFailure()
         }
 
@@ -530,7 +531,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     private fun onBookInitFailure() {
-        //TODO -> Fail gracefully
+       // -> Fail gracefully
+        AppUtil.getBookInitFailedHandler()?.onBookInitFailure(this)
     }
 
     private fun onBookInitSuccess() {

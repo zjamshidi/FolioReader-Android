@@ -8,10 +8,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.view.inputmethod.InputMethodManager
-import com.folioreader.Config
-import com.folioreader.Constants
-import com.folioreader.ReportHandler
-import com.folioreader.ShareHandler
+import com.folioreader.*
 import com.folioreader.util.SharedPreferenceUtil.getSharedPreferencesString
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.segment.analytics.Analytics
@@ -36,6 +33,7 @@ class AppUtil {
         private val FOLIO_READER_ROOT = "folioreader"
 
         private var shareHandler: ShareHandler? = null
+        private var bookInitFailedHandler: BookInitFailedHandler? = null
         private var reportHandler: ReportHandler? = null
 
         private var firebaseAnalytics: FirebaseAnalytics? = null
@@ -56,6 +54,15 @@ class AppUtil {
         @JvmStatic
         fun setShareHandler(handler: ShareHandler?) {
             shareHandler = handler
+        }
+
+        fun getBookInitFailedHandler(): BookInitFailedHandler? {
+            return bookInitFailedHandler
+        }
+
+        @JvmStatic
+        fun setBookInitFailedHandler(handler: BookInitFailedHandler?) {
+            bookInitFailedHandler = handler
         }
 
         fun getReportHandler(): ReportHandler? {

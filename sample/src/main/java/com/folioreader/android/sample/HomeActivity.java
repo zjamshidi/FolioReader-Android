@@ -15,6 +15,7 @@
  */
 package com.folioreader.android.sample;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.folioreader.BookInitFailedHandler;
 import com.folioreader.Config;
 import com.folioreader.FolioReader;
 import com.folioreader.ReportHandler;
@@ -87,6 +89,13 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
 
+                AppUtil.setBookInitFailedHandler(new BookInitFailedHandler() {
+                    @Override
+                    public void onBookInitFailure(Context context) {
+                        ((Activity) context).finish();
+                    }
+                });
+
                 AppUtil.setReportHandler(new ReportHandler() {
                     @Override
                     public void report(Context context) {
@@ -119,6 +128,7 @@ public class HomeActivity extends AppCompatActivity
 
                 AppUtil.setShareHandler(null);
                 AppUtil.setReportHandler(null);
+                AppUtil.setBookInitFailedHandler(null);
 
                 folioReader.setConfig(config, true)
                         .openBook("file:///android_asset/TheSilverChair.epub", "New Book");
