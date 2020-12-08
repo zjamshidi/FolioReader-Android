@@ -819,10 +819,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCode.TTS.value) {
+        if (requestCode == RequestCode.TTS.value && data != null) {
             Log.v(LOG_TAG, "-> onActivityResult -> " + RequestCode.TTS)
 
-            val resumePointStr = data!!.getStringExtra(TTSActivity.RESUME_POINT_EXTRA)
+            val resumePointStr = data.getStringExtra(TTSActivity.RESUME_POINT_EXTRA)
             val lastSentence = data.getStringExtra(TTSActivity.SENTENCE_EXTRA)
             val resumePoint = TTSActivity.TTSResumePoint.parseResumePoint(resumePointStr)
             if (resumePoint.chapterIndex > 0) {
