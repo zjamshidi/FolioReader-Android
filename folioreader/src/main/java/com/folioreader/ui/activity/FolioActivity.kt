@@ -44,8 +44,11 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.folioreader.*
+import com.folioreader.Config
+import com.folioreader.Constants
 import com.folioreader.Constants.*
+import com.folioreader.FolioReader
+import com.folioreader.R
 import com.folioreader.model.DisplayUnit
 import com.folioreader.model.HighlightImpl
 import com.folioreader.model.event.MediaOverlayPlayPauseEvent
@@ -374,6 +377,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemTts).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemShare).icon)
         UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemReport).icon)
+        UiUtil.setColorIntToDrawable(config.themeColor, menu.findItem(R.id.itemSendKindle).icon)
 
         if (!config.isShowTts)
             menu.findItem(R.id.itemTts).isVisible = false
@@ -383,6 +387,8 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             menu.findItem(R.id.itemShare).isVisible = false
         if (AppUtil.getReportHandler() == null)
             menu.findItem(R.id.itemReport).isVisible = false
+        if (!config.isShowSendToKindle || AppUtil.getSendToKindleHandler() == null)
+            menu.findItem(R.id.itemSendKindle).isVisible = false
         return true
     }
 
@@ -432,6 +438,12 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemReport) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
             AppUtil.getReportHandler()?.report(this)
+            return true
+        } else if (itemId == R.id.itemSendKindle) {
+            Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
+
+            AppUtil.logEvent("tapped_on_send_to_kindle")
+            AppUtil.getSendToKindleHandler()?.sendToKindle(this)
             return true
         }
 

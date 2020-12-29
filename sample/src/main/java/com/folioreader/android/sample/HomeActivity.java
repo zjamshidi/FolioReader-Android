@@ -31,6 +31,7 @@ import com.folioreader.BookInitFailedHandler;
 import com.folioreader.Config;
 import com.folioreader.FolioReader;
 import com.folioreader.ReportHandler;
+import com.folioreader.SendToKindleHandler;
 import com.folioreader.ShareHandler;
 import com.folioreader.model.HighLight;
 import com.folioreader.model.locators.ReadLocator;
@@ -80,12 +81,20 @@ public class HomeActivity extends AppCompatActivity
                         .setThemeColorRes(R.color.highlight_pink)
                         .setDefineEnabled(true)
                         .setSearchEnabled(true)
-                        .setDistractionFreeModeEnabled(true);
+                        .setDistractionFreeModeEnabled(true)
+                        .setShowSendToKindle(true);
 
                 AppUtil.setShareHandler(new ShareHandler() {
                     @Override
                     public void share(Context context, String selectedText) {
                         Log.d("CustomShareHandler", "share tapped on " + selectedText);
+                    }
+                });
+
+                AppUtil.setSendToKindleHandler(new SendToKindleHandler() {
+                    @Override
+                    public void sendToKindle(Context context) {
+                        Log.d("SendToKindleHandler", "send to kindle :)");
                     }
                 });
 
@@ -129,6 +138,7 @@ public class HomeActivity extends AppCompatActivity
                 AppUtil.setShareHandler(null);
                 AppUtil.setReportHandler(null);
                 AppUtil.setBookInitFailedHandler(null);
+                AppUtil.setSendToKindleHandler(null);
 
                 folioReader.setConfig(config, true)
                         .openBook("file:///android_asset/TheSilverChair.epub", "New Book");

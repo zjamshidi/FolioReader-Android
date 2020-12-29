@@ -4,9 +4,11 @@ import android.content.res.Resources;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
+
 import org.json.JSONObject;
 
 /**
@@ -31,6 +33,7 @@ public class Config implements Parcelable {
     public static final String CONFIG_ALLOWED_DIRECTION = "allowed_direction";
     public static final String CONFIG_DIRECTION = "direction";
     public static final String CONFIG_VOICE = "voice_name";
+    public static final String CONFIG_HAS_SEND_TO_KINDLE = "has_send_to_kindle";
     private static final AllowedDirection DEFAULT_ALLOWED_DIRECTION = AllowedDirection.ONLY_VERTICAL;
     private static final Direction DEFAULT_DIRECTION = Direction.VERTICAL;
     private static final int DEFAULT_THEME_COLOR_INT =
@@ -50,6 +53,7 @@ public class Config implements Parcelable {
     private AllowedDirection allowedDirection = DEFAULT_ALLOWED_DIRECTION;
     private Direction direction = DEFAULT_DIRECTION;
     private String voiceName = null;
+    private boolean showSendToKindle = false;
 
     /**
      * Reading modes available
@@ -97,6 +101,7 @@ public class Config implements Parcelable {
         dest.writeByte((byte) (searchEnabled ? 1 : 0));
         dest.writeByte((byte) (distractionFreeModeEnabled ? 1 : 0));
         dest.writeString(voiceName);
+        dest.writeByte((byte) (showSendToKindle ? 1 : 0));
     }
 
     protected Config(Parcel in) {
@@ -113,6 +118,7 @@ public class Config implements Parcelable {
         searchEnabled = in.readByte() != 0;
         distractionFreeModeEnabled = in.readByte() != 0;
         voiceName = in.readString();
+        showSendToKindle = in.readByte() != 0;
     }
 
     public Config() {
@@ -129,16 +135,18 @@ public class Config implements Parcelable {
         direction = getDirectionFromString(LOG_TAG, jsonObject.optString(CONFIG_DIRECTION));
         if (jsonObject.has(CONFIG_IS_NOTE_TAKING_ENABLED))
             hasNoteTaking = jsonObject.optBoolean(CONFIG_IS_NOTE_TAKING_ENABLED);
-        if(jsonObject.has(CONFIG_IS_DEFINE_ENABLED))
+        if (jsonObject.has(CONFIG_IS_DEFINE_ENABLED))
             defineEnabled = jsonObject.optBoolean(CONFIG_IS_DEFINE_ENABLED);
-        if(jsonObject.has(CONFIG_IS_COPY_ENABLED))
+        if (jsonObject.has(CONFIG_IS_COPY_ENABLED))
             copyEnabled = jsonObject.optBoolean(CONFIG_IS_COPY_ENABLED);
-        if(jsonObject.has(CONFIG_IS_SEARCH_ENABLED))
-            searchEnabled =jsonObject.optBoolean(CONFIG_IS_SEARCH_ENABLED);
+        if (jsonObject.has(CONFIG_IS_SEARCH_ENABLED))
+            searchEnabled = jsonObject.optBoolean(CONFIG_IS_SEARCH_ENABLED);
         if (jsonObject.has(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED))
             distractionFreeModeEnabled = jsonObject.optBoolean(CONFIG_IS_DISTRACTION_FREE_MODE_ENABLED);
         if (jsonObject.has(CONFIG_VOICE))
             voiceName = jsonObject.optString(CONFIG_VOICE);
+        if (jsonObject.has(CONFIG_HAS_SEND_TO_KINDLE))
+            showSendToKindle = jsonObject.optBoolean(CONFIG_HAS_SEND_TO_KINDLE);
     }
 
     public static Direction getDirectionFromString(final String LOG_TAG, String directionString) {
@@ -238,6 +246,15 @@ public class Config implements Parcelable {
 
     public Config setShowTts(boolean showTts) {
         this.showTts = showTts;
+        return this;
+    }
+
+    public boolean isShowSendToKindle() {
+        return showSendToKindle;
+    }
+
+    public Config setShowSendToKindle(boolean showSendToKindle) {
+        this.showSendToKindle = showSendToKindle;
         return this;
     }
 
@@ -384,6 +401,7 @@ public class Config implements Parcelable {
                 ", defineEnabled =" + defineEnabled +
                 ", searchEnabled =" + searchEnabled +
                 ", distractionFreeModeEnabled =" + distractionFreeModeEnabled +
+                ", showSendToKindle=" + showSendToKindle +
                 '}';
     }
 }

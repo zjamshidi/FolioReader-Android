@@ -35,6 +35,7 @@ class AppUtil {
         private var shareHandler: ShareHandler? = null
         private var bookInitFailedHandler: BookInitFailedHandler? = null
         private var reportHandler: ReportHandler? = null
+        private var sendToKindleHandler: SendToKindleHandler? = null
 
         private var firebaseAnalytics: FirebaseAnalytics? = null
         private var firebaseParams: Bundle? = null
@@ -72,6 +73,15 @@ class AppUtil {
         @JvmStatic
         fun setReportHandler(handler: ReportHandler?) {
             reportHandler = handler
+        }
+
+        fun getSendToKindleHandler(): SendToKindleHandler? {
+            return sendToKindleHandler
+        }
+
+        @JvmStatic
+        fun setSendToKindleHandler(handler: SendToKindleHandler?) {
+            sendToKindleHandler = handler
         }
 
         @JvmStatic
@@ -164,6 +174,7 @@ class AppUtil {
                     config.isDistractionFreeModeEnabled
                 )
                 obj.put(Config.CONFIG_VOICE, config.voiceName)
+                obj.put(Config.CONFIG_HAS_SEND_TO_KINDLE, config.isShowSendToKindle)
                 SharedPreferenceUtil.putSharedPreferencesString(
                     context, Config.INTENT_CONFIG,
                     obj.toString()

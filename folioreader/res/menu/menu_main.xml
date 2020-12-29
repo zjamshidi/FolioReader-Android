@@ -12,6 +12,13 @@
         tools:showAsAction="always" />
 
     <item
+        android:id="@+id/itemSendKindle"
+        android:icon="@drawable/ic_send_kindle"
+        android:title="@string/menu_item_send_kindle"
+        app:showAsAction="always"
+        tools:showAsAction="always" />
+
+    <item
         android:id="@+id/itemShare"
         android:icon="@drawable/ic_share"
         android:title="@string/menu_item_share"
