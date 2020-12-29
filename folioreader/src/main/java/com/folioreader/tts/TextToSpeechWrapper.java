@@ -64,14 +64,16 @@ public class TextToSpeechWrapper {
             String lastSelectedVoiceName = config.getVoiceName();
 
             Voice lastSelectedVoice = null;
-            for (Voice v : mTts.getVoices()) {
-                if (Objects.equals(v.getName(), lastSelectedVoiceName)) {
-                    lastSelectedVoice = v;
-                    break;
+            if(mTts.getVoices() != null) {
+                for (Voice v : mTts.getVoices()) {
+                    if (Objects.equals(v.getName(), lastSelectedVoiceName)) {
+                        lastSelectedVoice = v;
+                        break;
+                    }
                 }
+                if (lastSelectedVoice != null)
+                    mTts.setVoice(lastSelectedVoice);
             }
-            if (lastSelectedVoice != null)
-                mTts.setVoice(lastSelectedVoice);
 
             HashMap<String, String> params = new HashMap<String, String>();
             params.put(TextToSpeech.Engine.KEY_PARAM_UTTERANCE_ID, "end");
