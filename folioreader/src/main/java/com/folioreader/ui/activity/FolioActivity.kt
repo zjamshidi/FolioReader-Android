@@ -442,7 +442,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         } else if (itemId == R.id.itemSendKindle) {
             Log.v(LOG_TAG, "-> onOptionsItemSelected -> " + item.title)
 
-            AppUtil.logEvent("tapped_on_send_to_kindle")
+            AppUtil.logEvent("tapped_on_pdf_in_epub_reader")
             AppUtil.getSendToKindleHandler()?.sendToKindle(this)
             return true
         }
