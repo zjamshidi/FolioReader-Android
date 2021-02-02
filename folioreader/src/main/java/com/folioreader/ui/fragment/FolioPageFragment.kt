@@ -270,7 +270,7 @@ class FolioPageFragment : Fragment(),
     }
 
     fun scrollToSentence(sentence : String?) {
-        if (sentence != null && sentence.isNotEmpty())
+        if (sentence != null && sentence.isNotEmpty() && mWebview != null)
             mWebview!!.loadUrl(String.format(getString(R.string.callScrollToSentence), sentence))
     }
 
