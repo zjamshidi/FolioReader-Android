@@ -21,7 +21,7 @@ public final class HtmlUtil {
     public static String getHtmlContent(Context context, String htmlContent, Config config) {
 
         String cssPath =
-                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style.css");
+                String.format(context.getString(R.string.css_tag), "file:///android_asset/css/Style2.css");
 
         String jsPath = String.format(context.getString(R.string.script_tag),
                 "file:///android_asset/js/jsface.min.js") + "\n";

@@ -117,7 +117,7 @@ public class HomeActivity extends AppCompatActivity
                         .setTTSLocator(ttsResumePoint)
                         .setReadLocator(resumePoint)
                         .setReadLocatorListener(HomeActivity.this)
-                        .openBook(R.raw.book, "BOOK TITLE");
+                        .openBook(R.raw.reedsy2, "BOOK TITLE");
             }
         });
 

@@ -41,6 +41,7 @@ body {
     margin: 0 !important;
     padding: 20px 20px !important;
     overflow: !important;
+    font-family: inherit !important;
 }
 
 /* Custom padding for tablets */
@@ -230,7 +231,7 @@ html.nightMode .highlight_underline {border-bottom: 2px solid rgba(240, 40, 20, 
  */
 
 @font-face {
-    font-family: 'andada';
+    font-family: 'andada' !important;
     src: url('file:///android_asset/fonts/andada/Andada-Regular.otf');
 }
 
