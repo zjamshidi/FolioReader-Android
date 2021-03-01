@@ -76,6 +76,7 @@ import org.readium.r2.streamer.server.Server
 import java.lang.ref.WeakReference
 import java.util.*
 
+
 class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControllerCallback,
     View.OnSystemUiVisibilityChangeListener {
 
@@ -294,7 +295,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                 .setTitle("Access Needed")
                 .setMessage("StoryShots needs access to your storage to download the ebooks automatically and let you read offline. You can remove the downloaded ebooks by swiping left on them in your Bookshelf.")
                 .setPositiveButton(
@@ -308,7 +309,11 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 }
                 .setCancelable(false)
                 .create()
-                .show()
+            dialog.setOnShowListener {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(resources.getColor(R.color.default_theme_accent_color))
+            }
+            dialog.show()
         } else {
             setupBook()
         }
