@@ -38,6 +38,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
@@ -293,11 +294,21 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            ActivityCompat.requestPermissions(
-                this@FolioActivity,
-                Constants.getWriteExternalStoragePerms(),
-                Constants.WRITE_EXTERNAL_STORAGE_REQUEST
-            )
+            AlertDialog.Builder(this)
+                .setTitle("Access Needed")
+                .setMessage("StoryShots needs access to your storage to download the ebooks automatically and let you read offline. You can remove the downloaded ebooks by swiping left on them in your Bookshelf.")
+                .setPositiveButton(
+                    "ALLOW"
+                ) { _, _ ->
+                    ActivityCompat.requestPermissions(
+                        this@FolioActivity,
+                        Constants.getWriteExternalStoragePerms(),
+                        Constants.WRITE_EXTERNAL_STORAGE_REQUEST
+                    )
+                }
+                .setCancelable(false)
+                .create()
+                .show()
         } else {
             setupBook()
         }
@@ -424,9 +435,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
             AppUtil.logEvent("tapped_on_tts")
 
-            val chapterUrlList = ArrayList<String ?>(spine!!.size)
+            val chapterUrlList = ArrayList<String?>(spine!!.size)
             spine!!.forEach { chapterUrlList.add(it.href) }
-            val ttsIntent = TTSActivity.getStartIntent(applicationContext, streamerUrl, chapterUrlList, currentChapterIndex, ttsResumePoint);
+            val ttsIntent = TTSActivity.getStartIntent(
+                applicationContext,
+                streamerUrl,
+                chapterUrlList,
+                currentChapterIndex,
+                ttsResumePoint
+            )
             this@FolioActivity.startActivityForResult(ttsIntent, RequestCode.TTS.value)
 
             //showMediaController()
@@ -526,7 +543,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
             }
         }
 
-        portNumber = intent.getIntExtra(FolioReader.EXTRA_PORT_NUMBER, Constants.DEFAULT_PORT_NUMBER)
+        portNumber = intent.getIntExtra(
+            FolioReader.EXTRA_PORT_NUMBER,
+            Constants.DEFAULT_PORT_NUMBER
+        )
         portNumber = AppUtil.getAvailablePortNumber(portNumber)
 
         r2StreamerServer = Server(portNumber)
@@ -579,7 +599,15 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     override fun getStreamerUrl(): String {
 
         if (streamerUri == null) {
-            streamerUri = Uri.parse(String.format(Locale.UK, STREAMER_URL_TEMPLATE, LOCALHOST, portNumber, bookFileName))
+            streamerUri = Uri.parse(
+                String.format(
+                    Locale.UK,
+                    STREAMER_URL_TEMPLATE,
+                    LOCALHOST,
+                    portNumber,
+                    bookFileName
+                )
+            )
         }
         return streamerUri.toString()
     }
@@ -917,8 +945,14 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
 
         mFolioPageViewPager = findViewById(R.id.folioPageViewPager)
         // Replacing with addOnPageChangeListener(), onPageSelected() is not invoked
-        mFolioPageViewPager!!.setOnPageChangeListener(object : DirectionalViewpager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
+        mFolioPageViewPager!!.setOnPageChangeListener(object :
+            DirectionalViewpager.OnPageChangeListener {
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+            }
 
             override fun onPageSelected(position: Int) {
                 Log.v(LOG_TAG, "-> onPageSelected -> DirectionalViewpager -> position = $position")
@@ -941,14 +975,16 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                                 "position = " + position
                     )
 
-                    var folioPageFragment = mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
+                    var folioPageFragment =
+                        mFolioPageFragmentAdapter!!.getItem(position - 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToLast()
                         if (folioPageFragment.mWebview != null)
                             folioPageFragment.mWebview!!.dismissPopupWindow()
                     }
 
-                    folioPageFragment = mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
+                    folioPageFragment =
+                        mFolioPageFragmentAdapter!!.getItem(position + 1) as FolioPageFragment?
                     if (folioPageFragment != null) {
                         folioPageFragment.scrollToFirst()
                         if (folioPageFragment.mWebview != null)
@@ -1090,12 +1126,20 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         )
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         when (requestCode) {
-            Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults.isNotEmpty() &&  grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 setupBook()
             } else {
-                Toast.makeText(this, getString(R.string.cannot_access_epub_message), Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    this,
+                    getString(R.string.cannot_access_epub_message),
+                    Toast.LENGTH_LONG
+                ).show()
                 finish()
             }
         }
