@@ -297,7 +297,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
         ) {
             val dialog = AlertDialog.Builder(this)
                 .setTitle("Access Needed")
-                .setMessage("StoryShots needs access to your storage to download the ebooks automatically and let you read offline. You can remove the downloaded ebooks by swiping left on them in your Bookshelf.")
+                .setMessage("StoryShots needs access to your storage to download the ebooks automatically and let you read offline. You can remove the downloaded ebooks in your Bookshelf. You can also revoke this access from Android Settings at any time.")
                 .setPositiveButton(
                     "ALLOW"
                 ) { _, _ ->
