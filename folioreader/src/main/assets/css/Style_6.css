@@ -24,8 +24,8 @@ time, mark, audio, video {
     vertical-align: baseline;
 }
 
-body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
 del, dfn, em, img, ins, kbd, q, s, samp,
 small, strike, strong, sub, sup, tt, var,
@@ -37,6 +37,11 @@ article, aside, canvas, details, embed,
 figure, figcaption, footer, header, hgroup,
 menu, nav, output, ruby, section, summary,
 time, mark, audio, video {
+    font-family: inherit !important;
+    font-size: none !important;
+}
+
+body,p{
     font-family: inherit !important;
     font-size: inherit !important;
 }
