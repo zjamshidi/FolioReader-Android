@@ -299,7 +299,7 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                 .setTitle("Access Needed")
                 .setMessage("StoryShots needs access to your storage to download the ebooks automatically and let you read offline. You can remove the downloaded ebooks in your Bookshelf. You can also revoke this access from Android Settings at any time.")
                 .setPositiveButton(
-                    "ALLOW"
+                    "Continue"
                 ) { _, _ ->
                     ActivityCompat.requestPermissions(
                         this@FolioActivity,
@@ -307,10 +307,21 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
                         Constants.WRITE_EXTERNAL_STORAGE_REQUEST
                     )
                 }
-                .setCancelable(false)
+                .setNegativeButton(
+                    "Not Now"
+                ) { _, _ ->
+                    AppUtil.logEvent("epub_storage_permission_denied")
+                    finish()
+                }
+                .setOnCancelListener {
+                    AppUtil.logEvent("epub_storage_permission_denied")
+                    finish()
+                }
                 .create()
             dialog.setOnShowListener {
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                    .setTextColor(resources.getColor(R.color.default_theme_accent_color))
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
                     .setTextColor(resources.getColor(R.color.default_theme_accent_color))
             }
             dialog.show()
@@ -1138,8 +1149,10 @@ class FolioActivity : AppCompatActivity(), FolioActivityCallback, MediaControlle
     ) {
         when (requestCode) {
             Constants.WRITE_EXTERNAL_STORAGE_REQUEST -> if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                AppUtil.logEvent("epub_storage_permission_granted")
                 setupBook()
             } else {
+                AppUtil.logEvent("epub_storage_permission_denied")
                 Toast.makeText(
                     this,
                     getString(R.string.cannot_access_epub_message),
